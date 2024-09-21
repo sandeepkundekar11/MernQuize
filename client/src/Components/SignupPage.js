@@ -1,6 +1,7 @@
-import { memo, useState } from "react";
-import { NavLink } from "react-router-dom";
 
+import React, { memo, Suspense, useState } from "react";
+import { NavLink } from "react-router-dom"
+const CommanComponent = React.lazy(() => import("./CommanComponent"))
 // SignupPage component for user registration
 const SignupPage = () => {
     // State to store user input for signup
@@ -10,6 +11,7 @@ const SignupPage = () => {
         email: "",
         password: "",
     });
+    const [showPassword, setShowPassword] = useState(false);
 
     // State to store error messages for form validation
     const [error, setError] = useState({
@@ -68,45 +70,73 @@ const SignupPage = () => {
 
     // Render signup form
     return (
-        <div className="min-h-screen flex items-center justify-center bg-background text-foreground  ">
-            <div className="bg-card p-8 rounded-lg shadow-lg w-full max-w-md border-2 border-border">
-                <h1 className="text-2xl font-bold mb-6 text-center">Sign Up</h1>
-                <form className="space-y-4" onSubmit={handleSubmit}>
-                    {/* First Name input */}
-                    <div>
-                        <label htmlFor="fname" className="block text-sm font-medium text-muted-foreground">First Name</label>
-                        <input type="text" name="firstName" onChange={handleChange} id="fname" className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring focus:ring-primary" placeholder="Your Name" />
-                        <p className="text-red-500 text-sm">{error.firstNameError}</p>
-                    </div>
-                    {/* Last Name input */}
-                    <div>
-                        <label htmlFor="lname" className="block text-sm font-medium text-muted-foreground">Last Name</label>
-                        <input type="text" name="lastName" onChange={handleChange} id="lname" className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring focus:ring-primary" placeholder="Your Name" />
-                        <p className="text-red-500 text-sm">{error.lastNameError}</p>
-                    </div>
-                    {/* Email input */}
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-muted-foreground">Email</label>
-                        <input type="email" id="email" name="email" onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring focus:ring-primary" placeholder="you@example.com" />
-                        <p className="text-red-500 text-sm">{error.emailError}</p>
-                    </div>
-                    {/* Password input */}
-                    <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-muted-foreground">Password</label>
-                        <input type="password" id="password" name="password" onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-input border border-border rounded-md text-foreground focus:outline-none focus:ring focus:ring-primary" placeholder="••••••••" />
-                        <p className="text-red-500 text-sm">{error.passwordError}</p>
-                    </div>
+        <Suspense fallback={<div>Loading...</div>}>
+            <CommanComponent>
+                <div className="m-auto max-h-max min-h-[600px] w-11/12  p-4 shadow-2xl lg:w-[500px] bg-white rounded-lg mack-view">
 
-                    {/* Submit button */}
-                    <button type="submit" className=" w-full bg-blue-500 text-white font-bold hover:bg-blue-600 py-2 rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">Sign Up</button>
-                </form>
-                {/* Login link */}
-                <p className="mt-6 text-center text-sm text-muted-foreground">
-                    Already have an account? <NavLink to="/login" className="text-blue-500 font-bold hover:underline">Log in</NavLink>
-                </p>
-            </div>
-        </div>
+
+                    <h1 className="text-center text-3xl font-medium text-white">Signup</h1>
+
+                    <p className="mt-2 text-center text-white font-medium">Sign In to Explore and Create Quizzes</p>
+
+
+                    <form className="m-auto" onSubmit={handleSubmit}>
+                        <div className="mt-2 w-full">
+                            <p className="text-base text-slate-200">FirstName</p>
+                            <input type="text" name="firstName" value={signupInfo.firstName} onChange={handleChange} className="mt-2 h-10 w-11/12 border p-1 rounded-lg" placeholder="Enter firstName" />
+                            <p className="mt-1 text-sm font-semibold text-red-500">{error.firstNameError}</p>
+                        </div>
+                        <div className="mt-2 w-full">
+
+                            <p className="text-base text-slate-200">LastName</p>
+                            <input type="text" name="lastName" value={signupInfo.lastName} onChange={handleChange} className="mt-2 h-10 w-11/12 border p-1 rounded-lg" placeholder="Enter LastName" />
+                            <p className="mt-1 text-sm font-semibold text-red-500">{error.lastNameError}</p>
+
+
+                        </div>
+                        <div className="mt-2 w-full">
+                            <p className="text-base text-slate-200">Email</p>
+                            <input type="text" name="email" value={signupInfo.email} onChange={handleChange} className="mt-2 h-10 w-11/12 border p-1 rounded-lg" placeholder="Enter Email" />
+
+                            <p className="mt-1 text-sm font-semibold text-red-500">{error.emailError}</p>
+
+                        </div>
+                        <div className="mt-2">
+
+                            <p className="text-base text-slate-200">Password</p>
+                            <div className="mt-2 flex h-10 w-11/12 border rounded-lg bg-white">
+
+                                <input type={showPassword ? "text" : "password"} name="password" value={signupInfo.password} onChange={handleChange} className="h-full w-full p-2 rounded-lg" placeholder="***********" />
+                                <button className="h-full w-10 bg-white rounded-lg" onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-black">
+
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-3 9c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8z" />
+                                        </svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-black">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.98 8.223A10.451 10.451 0 0112 4.5c4.418 0 8 3.582 8 8 0 1.61-.47 3.11-1.28 4.377M3.98 8.223A10.451 10.451 0 003 12c0 4.418 3.582 8 8 8 1.61 0 3.11-.47 4.377-1.28M3.98 8.223L20.02 19.777M16.02 12.223A3 3 0 0012 9c-1.657 0-3 1.343-3 3 0 .61.18 1.18.48 1.66" />
+                                        </svg>
+                                    )}
+                                </button>
+                            </div>
+                            <p className="mt-1 text-sm font-semibold text-red-500">{error.passwordError}</p>
+
+                        </div>
+                        <button className="mt-5 h-11 w-11/12 rounded-lg bg-blue-500 font-semibold text-white">Signup</button>
+                        <p className="mt-1 text-sm font-semibold text-red-500"></p>
+
+                        <div className="mt-2 text-white">Already Have an account? <NavLink to="/login" className="font-medium text-blue-400">Login</NavLink></div>
+
+                    </form>
+
+
+                </div>
+            </CommanComponent>
+        </Suspense>
+
     )
+
 }
 
 export default memo(SignupPage);
