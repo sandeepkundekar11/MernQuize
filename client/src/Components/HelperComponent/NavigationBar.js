@@ -1,10 +1,41 @@
-import { memo } from "react";
+import { memo, useState, useRef, useEffect } from "react";
 
 const NavigationBar = () => {
+  // State to manage the open/close status of the dropdown menu
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Function to handle the click event for toggling the dropdown menu
+  const handleClick = () => {
+    console.log("clicked");
+    setIsOpen(!isOpen);
+  };
+
+  // Reference to the navigation bar element
+  const navRef = useRef(null);
+
+  // Effect to handle clicks outside the navigation bar to close the dropdown menu
+  useEffect(() => {
+    // Function to handle clicks outside the navigation bar
+    const handleClickOutside = (event) => {
+      // Check if the click is outside the navigation bar
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        // Close the dropdown menu
+        setIsOpen(false);
+      }
+    };
+    // Add event listener to detect clicks outside the navigation bar
+    document.addEventListener("mousedown", handleClickOutside);
+    // Cleanup function to remove the event listener
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="w-screen h-16 fixed top-0 bg-gray-800 cursor-pointer">
+    <div className="w-screen h-16 fixed top-0 bg-gray-800 cursor-pointer navbar">
       <div className="w-11/12 m-auto flex h-16 items-center justify-between">
-        <div className="flex ">
+        <div className="flex">
+          {/* Logo SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -16,16 +47,29 @@ const NavigationBar = () => {
           </svg>
           <h1 className="text-lg font-bold ml-2 text-white">Quize App</h1>
         </div>
-        {/*  */}
-        <div>
-          <ul className="flex items-center space-x-4 text-sm">
-            <li className="text-white">Home</li>
-            <li className="text-white">Leaderboard</li>
-            <li className="text-white bg-blue-500 px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600">Create Quiz</li>
+        {/* Navigation Links */}
+        <div className="h-auto">
+          <ul className="text-sm flex justify-between items-center space-x-4">
+            <li className="text-white bg-blue-500 px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600">
+              Create Quiz
+            </li>
+            <li className="text-white text-md relative">
+              {/* User Dropdown */}
+              <li className="text-white text-lg" onClick={handleClick}>Sandeep</li>
+              {isOpen && (
+                <ul ref={navRef} className="text-lg absolute mt-6 text-white bg-gray-800 -ml-10 shadow-md rounded-md p-2 w-40 h-auto">
+                  <li className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer" onClick={handleClick}>Home</li>
+                  <li className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer" onClick={handleClick}>Leaderboard</li>
+                  <li className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer" onClick={handleClick}>Profile</li>
+                  <li className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer" onClick={handleClick}>Logout</li>
+                </ul>
+
+              )}
+            </li>
           </ul>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

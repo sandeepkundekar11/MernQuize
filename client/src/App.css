@@ -5,8 +5,12 @@
 * {
   font-family: "Archivo Narrow", sans-serif !important;
   font-optical-sizing: auto;
-  overflow-x: hidden;
+
 }
+.navbar {
+  overflow: visible ;
+}
+
 .SignupPage {
   background-image: url("./Images/Quize_background.jpg");
   background-size: cover;

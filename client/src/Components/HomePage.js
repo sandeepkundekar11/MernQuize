@@ -4,9 +4,9 @@ const QuizeBox = React.lazy(() => import("./HelperComponent/QuizeBox"));
 
 const HomePage = () => {
     return (
-        <div className="w-screen h-full pt-16">
+        <div className="w-full h-full pt-16">
             {/*  */}
-            <div className="w-screen m-auto md:h-[600px] h-auto md:flex items-center p-4 bg-slate-900 ">
+            <div className="w-full m-auto md:h-[600px] h-auto md:flex items-center p-2 bg-slate-900 ">
                 <div className="md:w-2/4 w-full text-pretty  flex flex-col items-center  h-auto">
                     <h1 className="text-white md:text-5xl text-3xl text-center font-bold overflow-hidden">
                         Challenge Your Mind, One Quiz at a Time
@@ -32,7 +32,7 @@ const HomePage = () => {
                 </div>
             </div>
             {/* all quiz section */}
-            <div className="w-full h-full p-4">
+            <div className="w-full h-full p-2">
                 <h1 className="text-4xl text-center font-bold text-black">
                     Available Quizzes
                 </h1>
@@ -41,7 +41,7 @@ const HomePage = () => {
                     knowledge.
                 </p>
 
-                <div className="w-11/12 flex flex-wrap p-4 space-x-12 ">
+                <div className="w-11/12 m-auto flex flex-wrap p-4 space-x-12 ">
                     <Suspense fallback={<h1>loading....</h1>}>
                         {QuizeSubjects.map((quize) => (
                             <QuizeBox
