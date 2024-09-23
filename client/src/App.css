@@ -2,16 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-.SignupPage {
-    background-image: url("./Images/Quize_background.jpg");
-    background-size: cover;
-    background-position: center;
+* {
+  font-family: "Archivo Narrow", sans-serif !important;
+  font-optical-sizing: auto;
+  overflow-x: hidden;
 }
-.mack-view
-{
-    background-color: rgba(0, 0, 0, 0.57);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border-radius: 10px;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+.SignupPage {
+  background-image: url("./Images/Quize_background.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.mack-view {
+  background-color: rgba(0, 0, 0, 0.57);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
 }
