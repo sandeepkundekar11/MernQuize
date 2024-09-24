@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 const LoginPage = React.lazy(() => import("./Components/Loginpage"))
 const SignupPage = React.lazy(() => import("./Components/SignupPage"))
 const HomePage = React.lazy(() => import("./Components/HomePage"))
+const AddQuizepage = React.lazy(() => import("./Components/AddQuizepage"))
 const PrivateComponent = React.lazy(() => import("./PrivateComponent"))
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/" element={<PrivateComponent />}>
             {/* Nested route for home page */}
             <Route path="/home" element={<HomePage />} />
+            <Route path="/addquiz" element={<AddQuizepage />} />
           </Route>
         </Routes>
       </BrowserRouter>

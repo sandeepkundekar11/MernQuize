@@ -1,9 +1,9 @@
 import { memo, useState, useRef, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 const NavigationBar = () => {
   // State to manage the open/close status of the dropdown menu
   const [isOpen, setIsOpen] = useState(false);
-
+  const navigate = useNavigate();
   // Function to handle the click event for toggling the dropdown menu
   const handleClick = () => {
     console.log("clicked");
@@ -50,20 +50,44 @@ const NavigationBar = () => {
         {/* Navigation Links */}
         <div className="h-auto">
           <ul className="text-sm flex justify-between items-center space-x-4">
-            <li className="text-white bg-blue-500 px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600">
+            <li className="text-white bg-blue-500 px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600" onClick={() => navigate("/addquiz")}>
               Create Quiz
             </li>
             <li className="text-white text-md relative">
               {/* User Dropdown */}
-              <li className="text-white text-lg" onClick={handleClick}>Sandeep</li>
+              <li className="text-white text-lg" onClick={handleClick}>
+                Sandeep
+              </li>
               {isOpen && (
-                <ul ref={navRef} className="text-lg absolute mt-6 text-white bg-gray-800 -ml-10 shadow-md rounded-md p-2 w-40 h-auto">
-                  <li className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer" onClick={handleClick}>Home</li>
-                  <li className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer" onClick={handleClick}>Leaderboard</li>
-                  <li className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer" onClick={handleClick}>Profile</li>
-                  <li className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer" onClick={handleClick}>Logout</li>
+                <ul
+                  ref={navRef}
+                  className="text-lg absolute mt-6 text-white bg-gray-800 -ml-10 shadow-md rounded-md p-2 w-40 h-auto"
+                >
+                  <li
+                    className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer"
+                    onClick={handleClick}
+                  >
+                    Home
+                  </li>
+                  <li
+                    className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer"
+                    onClick={handleClick}
+                  >
+                    Leaderboard
+                  </li>
+                  <li
+                    className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer"
+                    onClick={handleClick}
+                  >
+                    Profile
+                  </li>
+                  <li
+                    className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer"
+                    onClick={handleClick}
+                  >
+                    Logout
+                  </li>
                 </ul>
-
               )}
             </li>
           </ul>
