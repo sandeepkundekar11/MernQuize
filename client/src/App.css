@@ -38,8 +38,6 @@
   align-items: center;
 }
 .poupContainer > div {
-  width: 800px;
-  height: 500px;
   background-color: white;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,

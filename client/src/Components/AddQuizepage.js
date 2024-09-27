@@ -1,104 +1,151 @@
-import { memo } from "react";
-
+import React, { memo, useState } from "react";
+const AddQuestionPopUp = React.lazy(() => import("./SubComponents/AddQuestion"))
 // AddQuizepage component to create a new quiz
 const AddQuizepage = () => {
+    const [quizInfo, setQuizInfo] = useState({
+        quizName: "",
+        quizDescription: "",
+        quizDifficulty: "",
+        quizTimeLimit: 0,
+    });
+    const [questions, setQuestions] = useState([]);
+    const [warning, setWarning] = useState({
+        quizNameWarning: "",
+        quizDescriptionWarning: "",
+        quizDifficultyWarning: "",
+        quizTimeLimitWarning: "",
+    });
+    const [showAddQuestionPopUp, setShowAddQuestionPopUp] = useState(false);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setQuizInfo({ ...quizInfo, [name]: value });
+    };
+    const handleCancel = () => {
+        setShowAddQuestionPopUp(false);
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        const newQuizeWarning = {
+            quizNameWarning: "",
+            quizDescriptionWarning: "",
+            quizDifficultyWarning: "",
+            quizTimeLimitWarning: "",
+        };
+        if (quizInfo.quizName.length <= 10) {
+            newQuizeWarning.quizNameWarning = "Quize Name must be greater than 10 characters";
+        }
+        if (quizInfo.quizDescription.length <= 20) {
+            newQuizeWarning.quizDescriptionWarning = "Quize Description must be greater than 20 characters";
+        }
+
+        if (quizInfo.quizDifficulty === "") {
+            newQuizeWarning.quizDifficultyWarning = "Quize Difficulty is Required";
+        }
+
+        if (quizInfo.quizTimeLimit <= 0) {
+            newQuizeWarning.quizTimeLimitWarning = "Quize Time Limit is Required";
+        }
+        if (quizInfo.quizName.length > 11 && quizInfo.quizDescription.length > 21 && quizInfo.quizDuration !== 0 && quizInfo.quizDifficulty !== "" && quizInfo.quizTimeLimit !== 0) {
+            // if all the fields are filled then show the add question pop up
+            // and set the quiz info to the quiz info state
+
+            setShowAddQuestionPopUp(true);
+        }
+        setWarning(newQuizeWarning);
+    };
+
+    const SaveQuestions = (question) => {
+        console.log(question);
+        setShowAddQuestionPopUp(false);
+        setQuestions([...questions, question]);
+    }
     return (
-        <div className="w-screen h-screen pt-16">
-            {/* Page title */}
-            <h1 className="text-2xl font-bold text-center text-gray-800 mt-8">
-                Create a new quiz by filling out the form below.
-            </h1>
-            <div className="w-11/12 m-auto mt-8">
-                <form className="w-4/5 m-auto">
-                    {/* Quiz Name input field */}
-                    <div className="flex flex-col">
-                        <label
-                            htmlFor="quiz-name"
-                            className="text-gray-800 font-bold text-lg"
-                        >
-                            Quiz Name
-                        </label>
+        <div className="w-screen h-full pt-16">
+            <div className="w-11/12 m-auto pt-6">
+                <h1 className="text-3xl text-blue-600 font-semibold">Create Quiz</h1>
+
+                <div className="mt-8">
+                    {/* add Quize name */}
+                    <div>
+                        <h2 className="text-xl font-medium">Add Quize Name</h2>
                         <input
                             type="text"
-                            id="quiz-name"
-                            className="p-2 rounded-md border-2 border-gray-300 mt-2"
+                            placeholder="Enter Quize Name"
+                            className="w-full h-12 outline-none border p-2 rounded focus:border-blue-950 mt-2"
+                            name="quizName"
+                            value={quizInfo.quizName}
+                            onChange={handleChange}
                         />
+                        <p className="warning text-sm text-red-600 font-bold mt-2"> {warning.quizNameWarning} </p>
                     </div>
-                    {/* Quiz Description input field */}
-                    <div className="flex flex-col mt-8">
-                        <label
-                            htmlFor="quiz-description"
-                            className="text-gray-800 font-bold text-lg"
-                        >
-                            Quiz Description
-                        </label>
-                        <textarea
-                            id="quiz-description"
-                            className="p-2 rounded-md border-2 border-gray-300 mt-2"
-                        />
-                    </div>
-                    <div className="flex mt-8 justify-between">
-                        {/* Quiz Category dropdown */}
-                        <div className="flex flex-col w-1/2 justify-start pr-6">
-                            <label
-                                htmlFor="quiz-category"
-                                className="text-gray-800 font-bold text-lg"
-                            >
-                                Quiz Category
-                            </label>
-                            <select
-                                id="quiz-category"
-                                className="p-2 rounded-md border-2 border-gray-300 mt-2 w-full"
-                            >
-                                <option value="category1">Beginner</option>
-                                <option value="category2">Intermediate</option>
-                                <option value="category3">Advanced</option>
-                            </select>
-                        </div>
-                        {/* Quiz Duration input field */}
-                        <div className="flex flex-col w-1/2 ">
-                            <label
-                                htmlFor="quiz-duration"
-                                className="text-gray-800 font-bold text-lg text-start"
-                            >
-                                Quiz Duration
-                            </label>
-                            <input
-                                type="number"
-                                id="quiz-duration"
-                                className="p-2 rounded-md border-2 border-gray-300 mt-2 w-full"
-                            />
-                        </div>
-                    </div>
-                    <hr className="w-full mt-8 border border-gray-300" />
-                    {/* Question */}
-                    <div className="flex mt-8 w-full ">
-                        <div className="w-full">
-                            <textarea type="text" className=" rounded-md border-2  w-full p-2" placeholder="Question 1" />
-                        </div>
-                    </div>
-                    {/* options */}
-                    <div className="mt-8 w-full ">
-                        <div className="w-full flex">
-                            <input type="text" className="p-2 rounded-md border-2 border-gray-300  w-11/12 mr-2" placeholder="Option 1" />
-                            <input type="text" className="p-2 rounded-md border-2 border-gray-300 w-11/12 ml-2" placeholder="Option 2" />
-                        </div>
-                        <div className="w-full flex mt-2">
-                            <input type="text" className="p-2 rounded-md border-2 border-gray-300  w-11/12 mr-2" placeholder="Option 3" />
-                            <input type="text" className="p-2 rounded-md border-2 border-gray-300  w-11/12 ml-2" placeholder="Option 4" />
-                        </div>
-                    </div>
-                    {/* Add Question button */}
 
-                    <button className="bg-blue-500 text-white p-2 rounded-md mt-8 w-96 block">Add Question</button>
-                    {/* Submit button */}
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white p-2 rounded-md mt-8 w-96"
-                    >
-                        Create Quiz
-                    </button>
-                </form>
+                    {/* quize discription */}
+                    <div className="mt-4">
+                        <h2 className="text-xl font-medium">Add Quize Discription</h2>
+                        <textarea
+                            rows={6}
+                            placeholder="Enter Quize Discription"
+                            className="w-full border p-2 mt-2 rounded outline-none focus:border-blue-950"
+                            name="quizDescription"
+                            value={quizInfo.quizDescription}
+                            onChange={handleChange}
+                        />
+                        <p className="warning text-sm text-red-600 font-bold mt-2"> {warning.quizDescriptionWarning} </p>
+                    </div>
+                    {/* quize duration and difficulty */}
+                    <div className="sm:flex justify-between mt-4 sm:gap-4">
+                        <div className="sm:w-1/2 w-full mr-2">
+                            <h2 className="text-xl font-medium">Add Quize Time Limit</h2>
+                            <select className="w-full h-12 outline-none border p-2 rounded focus:border-blue-950 mt-2"
+                                name="quizTimeLimit"
+                                value={quizInfo.quizTimeLimit}
+                                onChange={handleChange}
+                            >
+                                <option value={0}>Select Time Limit</option>
+                                <option value={5}>5 min</option>
+                                <option value={10}>10 min</option>
+                                <option value={15}>15 min</option>
+                            </select>
+                            <p className="warning text-sm text-red-600 font-bold mt-2"> {warning.quizTimeLimitWarning} </p>
+                        </div>
+                        <div className="sm:w-1/2 w-full sm:ml-2">
+                            <h2 className="text-xl font-medium">Add Quize Difficulty</h2>
+                            <select className="w-full h-12 outline-none border p-2 rounded focus:border-blue-950 mt-2"
+                                name="quizDifficulty"
+                                value={quizInfo.quizDifficulty}
+                                onChange={handleChange}
+                            >
+                                <option value="">Select Difficulty</option>
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                            <p className="warning text-sm text-red-600 font-bold mt-2"> {warning.quizDifficultyWarning} </p>
+                        </div>
+                    </div>
+
+                    {/* add quize button */}
+                    <div className="flex justify-end mt-4">
+                        <button className="bg-blue-600 w-40 hover:bg-blue-700 text-white px-4 py-2 rounded-md" onClick={handleSubmit}>Add Questions</button>
+                    </div>
+
+                    {/* created quize blocks */}
+                    {questions.map((question, index) => (
+                        <div key={index} className="mb-4 p-4 border rounded-lg shadow-sm">
+                            <h2 className="text-xl font-medium mb-2">Question {index + 1}</h2>
+                            <p className="mb-3">{question.question}</p>
+                            <ul className="list-disc pl-5 mb-3">
+                                {Object.entries(question.options).map(([key, value], idx) => (
+                                    <li key={idx}>{key.split('option')[1]}: {value}</li>
+                                ))}
+                            </ul>
+                            <p className="font-semibold">Correct Answer: {question.answer}</p>
+                            <p className="font-semibold">Marks: {question.marks}</p>
+                        </div>
+                    ))}
+
+                    {showAddQuestionPopUp && <AddQuestionPopUp handleCancel={handleCancel} addQuestion={SaveQuestions} />}
+                </div>
             </div>
         </div>
     );

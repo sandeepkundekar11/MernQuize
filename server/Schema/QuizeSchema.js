@@ -34,10 +34,7 @@ const quizeSchema = new mongoose.Schema({
         type: Number,
         required: true, // Total marks for the quiz is required
     },
-    timeLimit: {
-        type: Number,
-        required: true, // Time limit for the quiz is required
-    },
+
     createdAt: {
         type: Date,
         default: Date.now, // Default value is the current date and time

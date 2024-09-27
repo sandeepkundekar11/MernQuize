@@ -1,6 +1,6 @@
 import React, { memo, Suspense } from "react";
 import QuizeSubjects from "../DummyData/QuizeSubjects.json";
-const QuizeBox = React.lazy(() => import("./HelperComponent/QuizeBox"));
+const QuizeBox = React.lazy(() => import("./SubComponents/QuizeBox"));
 
 const HomePage = () => {
     return (

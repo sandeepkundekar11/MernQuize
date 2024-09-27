@@ -1,6 +1,6 @@
 import React, { memo, Suspense, useEffect, useState } from "react";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
-const NaviagtionBar = React.lazy(() => import("./Components/HelperComponent/NavigationBar"))
+const NaviagtionBar = React.lazy(() => import("./Components/SubComponents/NavigationBar"))
 // PrivateComponent to protect routes that require authentication
 const PrivateComponent = () => {
     // State to track if the user is logged in
