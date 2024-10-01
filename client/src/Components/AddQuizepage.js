@@ -1,18 +1,27 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 const AddQuestionPopUp = React.lazy(() =>
   import("./SubComponents/AddQuestionPopup")
 );
 const Question = React.lazy(() => import("./SubComponents/Question"));
 // AddQuizepage component to create a new quiz
 const AddQuizepage = () => {
+  // Function to get quiz information from local storage
+  const GetDataFromLoacalstorage = () => {
+    let quize = localStorage.getItem("quize");
+    if (quize) {
+      return JSON.parse(quize);
+    }
+    return {
+      quizName: "",
+      quizDescription: "",
+      quizDifficulty: "",
+      quizTimeLimit: 0,
+      quizSubject: "",
+      questions: [],
+    };
+  };
   // State to hold quiz information
-  const [quizInfo, setQuizInfo] = useState({
-    quizName: "",
-    quizDescription: "",
-    quizDifficulty: "",
-    quizTimeLimit: 0,
-    quizSubject: "",
-  });
+  const [quizInfo, setQuizInfo] = useState(GetDataFromLoacalstorage());
   // State to hold list of questions
   const [questions, setQuestions] = useState([]);
   // State to hold warning messages
@@ -86,8 +95,19 @@ const AddQuizepage = () => {
   const SaveQuestions = (question) => {
     console.log(question); // Log the question for debugging
     setShowAddQuestionPopUp(false); // Close the Add Question Popup
+    setQuizInfo({
+      ...quizInfo,
+      questions: [...quizInfo.questions, question],
+    });
     setQuestions([...questions, question]); // Add new question to the list
   };
+
+
+
+  useEffect(() => {
+    // Save the quiz information to local storage whenever it changes
+    localStorage.setItem("quize", JSON.stringify(quizInfo));
+  }, [quizInfo]);
 
   return (
     <div className="w-full h-full pt-16">
@@ -210,7 +230,7 @@ const AddQuizepage = () => {
 
           <div className=" mt-6 space-y-3">
             {/* Display Created Quiz Questions */}
-            {questions.map((ele, index) => {
+            {quizInfo.questions.map((ele, index) => {
               return (
                 <Question
                   quizInfo={{
