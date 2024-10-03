@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-const QuizeBox = ({ title, discription, path }) => {
+const QuizeBox = ({ title, discription, path, onView }) => {
   return (
     <div className="w-72 min-h-56 max-h-max  border p-2 hover:shadow-md hover:shadow-gray-500">
       <div className="w-16 h-16 ">
@@ -15,8 +15,8 @@ const QuizeBox = ({ title, discription, path }) => {
       </div>
       <h1 className="text-xl font-semibold ">{title}</h1>
       <p className="text-sm text-gray-500 mt-4">{discription}</p>
-      <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-6  hover:bg-blue-600">
-        Start Quiz
+      <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-6  hover:bg-blue-600" onClick={onView}>
+        View Quiz
       </button>
     </div>
   );
