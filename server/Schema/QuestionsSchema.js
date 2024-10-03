@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Define the schema for a question
 const questionSchema = new mongoose.Schema({
@@ -26,10 +26,6 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: true, // Correct answer is required
     },
-    quize: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Quize", // Reference to the Quize model
-    },
     marks: {
         type: Number,
         required: true, // Marks for the question is required
@@ -37,7 +33,7 @@ const questionSchema = new mongoose.Schema({
 });
 
 // Create the model for a question
-const question = mongoose.model("Question", questionSchema);
+const Quizequestion = mongoose.model("Question", questionSchema);
 
 // Export the question model
-module.exports = question;
+module.exports = Quizequestion;

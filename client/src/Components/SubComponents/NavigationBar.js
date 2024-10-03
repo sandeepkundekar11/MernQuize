@@ -7,6 +7,7 @@ const NavigationBar = () => {
   // Function to handle the click event for toggling the dropdown menu
   const handleClick = () => {
     console.log("clicked");
+
     setIsOpen(!isOpen);
   };
 
@@ -32,9 +33,9 @@ const NavigationBar = () => {
   }, []);
 
   return (
-    <div className="w-screen h-16 fixed top-0 bg-gray-800 cursor-pointer navbar">
+    <div className="w-screen h-16 fixed top-0 bg-gray-800 cursor-pointer navbar z-50">
       <div className="w-11/12 m-auto flex h-16 items-center justify-between">
-        <div className="flex">
+        <div className="flex" onClick={() => navigate("/")}>
           {/* Logo SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +54,7 @@ const NavigationBar = () => {
             <li className="text-white bg-blue-500 px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600" onClick={() => navigate("/addquiz")}>
               Create Quiz
             </li>
-            <li className="text-white text-md relative">
+            <li className="text-white text-md relative z-50">
               {/* User Dropdown */}
               <li className="text-white text-lg" onClick={handleClick}>
                 Sandeep
@@ -61,7 +62,7 @@ const NavigationBar = () => {
               {isOpen && (
                 <ul
                   ref={navRef}
-                  className="text-lg absolute mt-6 text-white bg-gray-800 -ml-10 shadow-md rounded-md p-2 w-40 h-auto"
+                  className="text-lg absolute mt-6 text-white bg-gray-800 -ml-10 shadow-md rounded-md p-2 w-40 h-auto "
                 >
                   <li
                     className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer"
@@ -71,13 +72,19 @@ const NavigationBar = () => {
                   </li>
                   <li
                     className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer"
-                    onClick={handleClick}
+                    onClick={() => {
+                      navigate("/leaderboard")
+                      setIsOpen(false)
+                    }}
                   >
                     Leaderboard
                   </li>
                   <li
                     className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer"
-                    onClick={handleClick}
+                    onClick={() => {
+                      navigate("/profile")
+                      setIsOpen(false)
+                    }}
                   >
                     Profile
                   </li>
