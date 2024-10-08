@@ -15,3 +15,10 @@ App.use("/quiz", UserRoute)
 App.listen(process.env.PORT, () => {
     console.log(`server is running on port ${process.env.PORT}`)
 })
+
+
+// API Endpoints
+// POST /quiz/register - Register a new user
+// POST /quiz/login - Login a user
+// GET /quiz/profile - Get user profile (Protected)
+// PUT /quiz/updateprofile - Update user profile (Protected, supports image upload)

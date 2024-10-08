@@ -6,6 +6,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true, // First name is required
     },
+    image: {
+        type: String,
+        required: true, // Image is required
+    },
+    bio: {
+        type: String,
+        required: true, // Bio is required
+    },
     lastName: {
         type: String,
         required: true, // Last name is required
