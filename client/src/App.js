@@ -1,5 +1,7 @@
 import React, { Suspense } from "react";
 import "./App.css";
+import { Provider } from "react-redux";
+import store from "./Redux/Store";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePageLoadingSkeleton from "./Components/HelperComponent/HomePageLoadingSkeleton";
 const LoginPage = React.lazy(() => import("./Components/Loginpage"));
@@ -14,31 +16,33 @@ const AttemptQuizeComponent = React.lazy(() => import("./Components/AttemptQuize
 const App = () => {
   return (
     <Suspense fallback={<HomePageLoadingSkeleton />}>
-      <BrowserRouter>
-        <Routes>
-          {/* Route for login page */}
-          <Route path="/login" element={<LoginPage />} />
-          {/* Route for signup page */}
-          <Route path="/signup" element={<SignupPage />} />
-          {/* Private route for authenticated users */}
-          <Route path="/" element={<PrivateComponent />}>
-            {/* Nested route for home page */}
-            <Route path="/" element={<HomePage />} />
-            {/* Route for add quiz page */}
-            <Route path="/addquiz" element={<AddQuizepage />} />
-            {/* Route for leaderboard page */}
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            {/* Route for profile page */}
-            <Route path="/profile" element={<Profile />} />
-            {/* Route for subject quizzes page */}
-            <Route
-              path="/subjectquizes/:subject"
-              element={<SubjectQuizzes />}
-            />
-            <Route path="/attemptquiz" element={<AttemptQuizeComponent />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <Routes>
+            {/* Route for login page */}
+            <Route path="/login" element={<LoginPage />} />
+            {/* Route for signup page */}
+            <Route path="/signup" element={<SignupPage />} />
+            {/* Private route for authenticated users */}
+            <Route path="/" element={<PrivateComponent />}>
+              {/* Nested route for home page */}
+              <Route path="/" element={<HomePage />} />
+              {/* Route for add quiz page */}
+              <Route path="/addquiz" element={<AddQuizepage />} />
+              {/* Route for leaderboard page */}
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              {/* Route for profile page */}
+              <Route path="/profile" element={<Profile />} />
+              {/* Route for subject quizzes page */}
+              <Route
+                path="/subjectquizes/:QuizSubject"
+                element={<SubjectQuizzes />}
+              />
+              <Route path="/attemptquiz" element={<AttemptQuizeComponent />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </Provider>
     </Suspense>
   );
 };

@@ -1,6 +1,7 @@
 const AsyncHandler = require("express-async-handler");
 const { quize } = require("../Schema/QuizeSchema");
 const { Quizequestion } = require("../Schema/QuestionsSchema");
+const { user } = require("../Schema/UserSchema");
 // @desc    Create a new quiz
 // @route   POST /api/quizes
 // @access  Private
@@ -18,7 +19,7 @@ const CreateQuize = AsyncHandler(async (req, res) => {
 
   try {
     // first creating the question in the loop
-    const Allquestion = Promise.all(
+    const Allquestion = await Promise.all(
       quizeQuestions.map(async (question) => {
         const {
           question,
@@ -42,7 +43,7 @@ const CreateQuize = AsyncHandler(async (req, res) => {
     );
 
     // now creating the quiz
-    const newQuize = await quize.create(
+    const newQuize = new quize(
       {
         quizeName,
         quizeDescription,
@@ -56,6 +57,17 @@ const CreateQuize = AsyncHandler(async (req, res) => {
       {
         new: true,
         // This option is not needed here as it is used in findAndUpdate operations in Mongoose to return the modified document rather than the original.
+      }
+    );
+    await newQuize.save();
+
+    // update the quize
+    const UpdateUser = await user.updateOne(
+      { _id: req.userId },
+      {
+        $push: {
+          createdquizes: newQuize._id,
+        },
       }
     );
 
