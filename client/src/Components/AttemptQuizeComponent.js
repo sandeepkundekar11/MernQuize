@@ -28,9 +28,49 @@ const AttemptQuizeComponent = () => {
     <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8 pt-20">
       <div className="max-w-3xl mx-auto">
         <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
+          <div className="bg-blue-600 p-4">
+            {/* quize Title */}
+            <div className="flex items-center">
+              <p className="text-2xl text-white font-semibold">Title :</p>
+              <p className="text-xl text-white pl-4 ">
+                This Quize is for History
+              </p>
+            </div>
+            {/* quize Discription */}
+            <div className="pt-4">
+              <p className="text-white text-2xl font-semibold">Discription</p>
+              <p className="text-gray-300 text-lg ">
+                n both the try-catch blocks, the catch block now sends a proper
+                error response with status 500 (Internal Server Error) and an
+                error message. You can customize the error message based on your
+                application’s needs.
+              </p>
+            </div>
+          </div>
+
           <div className="px-6 py-4 bg-blue-600 text-white flex justify-between items-center">
-            <h1 className="text-2xl font-bold">{quiz.title}</h1>
-            <div className="text-xl font-semibold">Time Remaining: 00:00</div>
+            {/* Author name */}
+            <div className="flex flex-wrap">
+              <p className="text-gray-100 text-xl font-medium">Created By :</p>
+              <p className="text-gray-300 text-xl font-medium">Sandeep N K</p>
+            </div>
+            {/* timing duration */}
+            <div className="text-xl font-semibold text-wrap">
+              Time Remaining: 00:00
+            </div>
+          </div>
+          {/*  */}
+          <div className="px-6 py-4 bg-blue-600 text-white flex justify-between items-center">
+            <span className="flex flex-wrap">
+              <p className="text-gray-100 text-xl font-semibold">
+                Difficulty :
+              </p>
+              <p className="text-gray-300 text-lg font-semibold">Medium</p>
+            </span>
+            <span className="flex flex-wrap">
+              <p className="text-gray-100 font-semibold text-xl">Category : </p>
+              <p className="text-gray-300 text-lg font-semibold">History</p>
+            </span>
           </div>
         </div>
 

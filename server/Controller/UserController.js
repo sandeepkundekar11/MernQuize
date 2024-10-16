@@ -65,10 +65,10 @@ const loginUser = asyncHandler(async (req, res) => {
           user: userExists,
         });
       } else {
-        res.status(400).json({ message: "password is incorrect" });
+        res.status(200).json({ message: "password is incorrect" });
       }
     } else {
-      res.status(400).json({ message: "User not found" });
+      res.status(500).json({ message: "User not found" });
     }
   } catch (error) {
     // Handle any errors that occur during login
@@ -92,7 +92,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
         image: userProfile.image,
         _id: userProfile._id,
         createdQuizes: userProfile.createdquizes,
-        joinedQuizes: userProfile.joinedquizes,
+        joinedQuizes: userProfile.attenedquizes,
       };
       res.status(200).json({
         message: "User profile fetched successfully",
@@ -107,6 +107,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// update profile
 const UpdateProfile = asyncHandler(async (req, res) => {
   const { firstName, lastName, bio } = req.body;
   let userInfo = {};
@@ -125,7 +126,7 @@ const UpdateProfile = asyncHandler(async (req, res) => {
       user: userProfile,
     });
   } else {
-    res.status(400).json({ message: "User not found" });
+    res.status(200).json({ message: "User not found" });
   }
 });
 

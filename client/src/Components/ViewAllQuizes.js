@@ -7,7 +7,7 @@ const SubjectQuizzes = () => {
   // all subjects
   const subjects = ["All", "Mathematics", "Science", "History", "Technology"];
   // get subject from params
-  const { subject } = useParams();
+  const { QuizSubject } = useParams();
   // all quizzes
   const quizzes = [
     {
@@ -55,8 +55,8 @@ const SubjectQuizzes = () => {
   ];
   useEffect(() => {
     // set selected subject from params
-    setSelectedSubject(subject);
-  }, [subject]);
+    setSelectedSubject(QuizSubject);
+  }, []);
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8 pt-20">
       <div className="md:w-11/12 w-full mx-auto">
@@ -71,9 +71,8 @@ const SubjectQuizzes = () => {
               onClick={() => {
                 setSelectedSubject(subject);
               }}
-              className={` ${
-                SelectedSubject === subject ? "bg-blue-400" : ""
-              } px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+              className={` ${SelectedSubject === subject && "bg-blue-600 text-white"
+                } px-4 py-2 rounded-full text-sm font-medium  text-gray-700 border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
             >
               {subject}
             </button>
