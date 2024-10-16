@@ -1,0 +1,115 @@
+{
+    "title": "World Geography Quiz",
+    "questions": [
+        {
+            "id": 1,
+            "question": "What is the capital of France?",
+            "options": [
+                "London",
+                "Berlin",
+                "Paris",
+                "Madrid"
+            ],
+            "userAnswer": ""
+        },
+        {
+            "id": 2,
+            "question": "Which river is the longest in the world?",
+            "options": [
+                "Amazon",
+                "Nile",
+                "Yangtze",
+                "Mississippi"
+            ],
+            "userAnswer": ""
+        },
+        {
+            "id": 3,
+            "question": "On which continent is the Sahara Desert located?",
+            "options": [
+                "Africa",
+                "Asia",
+                "South America",
+                "Australia"
+            ],
+            "userAnswer": ""
+        },
+        {
+            "id": 4,
+            "question": "What is the largest country by land area?",
+            "options": [
+                "China",
+                "United States",
+                "Canada",
+                "Russia"
+            ],
+            "userAnswer": ""
+        },
+        {
+            "id": 5,
+            "question": "Which mountain range runs along the border of France and Spain?",
+            "options": [
+                "Alps",
+                "Andes",
+                "Pyrenees",
+                "Carpathians"
+            ],
+            "userAnswer": ""
+        },
+        {
+            "id": 6,
+            "question": "What is the smallest country in the world?",
+            "options": [
+                "Vatican City",
+                "Monaco",
+                "Nauru",
+                "Tuvalu"
+            ],
+            "userAnswer": ""
+        },
+        {
+            "id": 7,
+            "question": "Which country has the most natural lakes?",
+            "options": [
+                "Canada",
+                "Russia",
+                "USA",
+                "India"
+            ],
+            "userAnswer": ""
+        },
+        {
+            "id": 8,
+            "question": "In which ocean is the Bermuda Triangle located?",
+            "options": [
+                "Atlantic Ocean",
+                "Pacific Ocean",
+                "Indian Ocean",
+                "Arctic Ocean"
+            ],
+            "userAnswer": ""
+        },
+        {
+            "id": 9,
+            "question": "What is the longest mountain range in the world?",
+            "options": [
+                "Andes",
+                "Himalayas",
+                "Rocky Mountains",
+                "Alps"
+            ],
+            "userAnswer": ""
+        },
+        {
+            "id": 10,
+            "question": "Which country is known as the Land of the Rising Sun?",
+            "options": [
+                "Japan",
+                "China",
+                "South Korea",
+                "Thailand"
+            ],
+            "userAnswer": ""
+        }
+    ]
+}

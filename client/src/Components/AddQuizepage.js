@@ -1,4 +1,5 @@
 import React, { memo, useState, useEffect } from "react";
+const DraftQuizePopup = React.lazy(() => import("./SubComponents/DraftQuizePopup"));
 const AddQuestionPopUp = React.lazy(() =>
   import("./SubComponents/AddQuestionPopup")
 );
@@ -22,6 +23,7 @@ const AddQuizepage = () => {
   };
   // State to hold quiz information
   const [quizInfo, setQuizInfo] = useState(GetDataFromLoacalstorage());
+  const [draftQuize, setDraftQuize] = useState(false);
   // State to hold list of questions
   const [questions, setQuestions] = useState([]);
   // State to hold warning messages
@@ -102,12 +104,38 @@ const AddQuizepage = () => {
     setQuestions([...questions, question]); // Add new question to the list
   };
 
-
+  useEffect(() => {
+    let draftQuize = localStorage.getItem("quize");
+    if (draftQuize) {
+      setDraftQuize(true);
+    }
+    else {
+      setDraftQuize(false);
+    }
+  }, []);
 
   useEffect(() => {
+
     // Save the quiz information to local storage whenever it changes
-    localStorage.setItem("quize", JSON.stringify(quizInfo));
+    // if quize is not empty then save it to local storage
+    if (Object.entries(quizInfo).some((value) => value[1].length > 1)) {
+      console.log(quizInfo)
+      localStorage.setItem("quize", JSON.stringify(quizInfo));
+    }
+    else {
+      localStorage.removeItem("quize")
+    }
   }, [quizInfo]);
+
+  const handleCreateNewQuiz = () => {
+    localStorage.removeItem("quize")
+    setQuizInfo(GetDataFromLoacalstorage())
+    setDraftQuize(false);
+  };
+
+  const handleContinueEditing = () => {
+    setDraftQuize(false);
+  };
 
   return (
     <div className="w-full h-full pt-16">
@@ -199,6 +227,7 @@ const AddQuizepage = () => {
                 <option value="Maths">Maths</option>
                 <option value="Science">Science</option>
                 <option value="History">History</option>
+                <option value="Technology">Technology</option>
               </select>
               <p className="warning text-sm text-red-600 font-bold mt-2">
                 {warning.quizSubjectWarning}
@@ -214,6 +243,7 @@ const AddQuizepage = () => {
             >
               Add Questions
             </button>
+
           </div>
 
           {/* {
@@ -257,6 +287,7 @@ const AddQuizepage = () => {
               addQuestion={SaveQuestions}
             />
           )}
+          {draftQuize && <DraftQuizePopup handleCreateNewQuiz={handleCreateNewQuiz} handleContinueEditing={handleContinueEditing} />}
         </div>
       </div>
     </div>
