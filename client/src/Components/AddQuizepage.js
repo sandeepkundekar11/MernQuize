@@ -1,4 +1,9 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { AddQuizApiCall } from "../Redux/Actions/AddQuizAction";
+import Loader from "./HelperComponent/Loader";
+import SuccessQuizPopup from "./HelperComponent/SuccessQuizPopup";
 const DraftQuizePopup = React.lazy(() => import("./SubComponents/DraftQuizePopup"));
 const AddQuestionPopUp = React.lazy(() =>
   import("./SubComponents/AddQuestionPopup")
@@ -6,6 +11,10 @@ const AddQuestionPopUp = React.lazy(() =>
 const Question = React.lazy(() => import("./SubComponents/Question"));
 // AddQuizepage component to create a new quiz
 const AddQuizepage = () => {
+  const Dispatch = useDispatch()
+  const { AddQuizMessage, AddQuizLoading, AddQuizError } = useSelector((state) => state.addQuiz)
+  const Navigate = useNavigate()
+  const [showSuccessQuiz, setSuccessQuiz] = useState(false)
   // Function to get quiz information from local storage
   const GetDataFromLoacalstorage = () => {
     let quize = localStorage.getItem("quize");
@@ -127,15 +136,51 @@ const AddQuizepage = () => {
     }
   }, [quizInfo]);
 
+  // handler new quize and remove that quiz from localstorage
   const handleCreateNewQuiz = () => {
     localStorage.removeItem("quize")
     setQuizInfo(GetDataFromLoacalstorage())
     setDraftQuize(false);
   };
 
+  // set draft to false
   const handleContinueEditing = () => {
     setDraftQuize(false);
   };
+
+
+  // Handling the uploadQuize
+  const uploadQuize = () => {
+    // converting the questions in the required formate
+    const Updatedquestions = quizInfo.questions.map((question) => {
+      return {
+        question: question?.question,
+        optionA: question?.options?.option1,
+        optionB: question?.options?.option2,
+        optionC: question?.options?.option3,
+        optionD: question?.options?.option4,
+        correctAnswer: question?.options[question?.answer],
+        marks: parseInt(question?.marks)
+      }
+    })
+    // getting the total marks of quize
+    let TotalMarks = Updatedquestions.reduce((curr, acc) => {
+      return curr + acc.marks
+    }, 0)
+    // creating the final quiz 
+    const Quiz = {
+      quizeName: quizInfo?.quizName,
+      quizeDescription: quizInfo?.quizDescription,
+      quizeDuration: parseInt(quizInfo?.quizTimeLimit),
+      quizeDifficulty: quizInfo?.quizDifficulty,
+      quizeCategory: quizInfo?.quizSubject,
+      totalMarks: TotalMarks,
+      quizeQuestions: Updatedquestions
+    }
+    Dispatch(AddQuizApiCall(Quiz, () => {
+      setSuccessQuiz(true)
+    }))
+  }
 
   return (
     <div className="w-full h-full pt-16">
@@ -246,18 +291,12 @@ const AddQuizepage = () => {
 
           </div>
 
-          {/* {
-           "question": "dsaaaaaaaaaaaaaaaaaaaaaaa",
-           "options": {
-           "option1": "dsasasasasasasasasasa",
-           "option2": "sdadad",
-           "option3": "dasdasd",
-           "option4": "dasdsa"
-            },
-           "answer": "option1",
-           "marks": "2"
-          } */}
 
+          {/* adding the Quiz button */}
+          {
+            quizInfo.questions.length > 1 &&
+            <button onClick={uploadQuize} className="w-36 text-white h-8 p-1 rounded-md bg-blue-600 hover:bg-blue-700 shadow-sm">Add Quiz</button>
+          }
           <div className=" mt-6 space-y-3">
             {/* Display Created Quiz Questions */}
             {quizInfo.questions.map((ele, index) => {
@@ -287,7 +326,48 @@ const AddQuizepage = () => {
               addQuestion={SaveQuestions}
             />
           )}
+          {/* draft popup */}
           {draftQuize && <DraftQuizePopup handleCreateNewQuiz={handleCreateNewQuiz} handleContinueEditing={handleContinueEditing} />}
+
+
+          {/* adding Loader */}
+          {
+            AddQuizLoading && <Loader />
+          }
+
+
+          {/* this popup will visible when quiz is successfully submited */}
+          {
+            showSuccessQuiz && <SuccessQuizPopup
+              quizInfo={{ QuizTille: quizInfo?.quizName, questionsNumbers: quizInfo.questions.length }}
+              key={Date.now()}
+              GotoHomePage={() => {
+                // clear all the previous questions
+                setQuizInfo({
+                  quizName: "",
+                  quizDescription: "",
+                  quizDifficulty: "",
+                  quizTimeLimit: 0,
+                  quizSubject: "",
+                  questions: [],
+                })
+                Navigate("/")
+              }}
+              createnewQuiz={() => {
+                // clear all the previous questions
+                setQuizInfo({
+                  quizName: "",
+                  quizDescription: "",
+                  quizDifficulty: "",
+                  quizTimeLimit: 0,
+                  quizSubject: "",
+                  questions: [],
+                })
+                setSuccessQuiz(false)
+              }
+              }
+            />
+          }
         </div>
       </div>
     </div>

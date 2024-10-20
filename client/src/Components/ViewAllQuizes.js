@@ -1,62 +1,35 @@
 import React, { memo, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { getAllQuizApiCall } from "../Redux/Actions/GetAllQuizAction";
+import QuizNoticePopup from "./HelperComponent/QuizNoticePopup";
 const QuizCard = React.lazy(() => import("./SubComponents/QuizCard"));
 const SubjectQuizzes = () => {
+  const Dispatch = useDispatch()
+  const { allQuiz, allQuizError, allQuizLoading } = useSelector((state) => state.allQuiz)
+  const Navigate = useNavigate()
+  const [showNotice, setShowNotice] = useState(false)
+  // store the information for the selected quiz and sent to  Notice component
+  const [SelectedQuizInfo, setSelectedQuizeInfo] = useState({ duration: 0, questionNumbers: 0, id: null })
+  //stores all the Quiz in to state
+  const [AllQuiz, setAllquiz] = useState([])
   // selected subject
   const [SelectedSubject, setSelectedSubject] = useState("All");
   // all subjects
   const subjects = ["All", "Mathematics", "Science", "History", "Technology"];
   // get subject from params
   const { QuizSubject } = useParams();
-  // all quizzes
-  const quizzes = [
-    {
-      id: 1,
-      title: "Algebra Basics",
-      subject: "Mathematics",
-      questions: 20,
-      difficulty: "Easy",
-    },
-    {
-      id: 2,
-      title: "World History",
-      subject: "History",
-      questions: 30,
-      difficulty: "Medium",
-    },
-    {
-      id: 3,
-      title: "Physics Fundamentals",
-      subject: "Science",
-      questions: 25,
-      difficulty: "Medium",
-    },
-    {
-      id: 4,
-      title: "Introduction to Computers",
-      subject: "Technology",
-      questions: 15,
-      difficulty: "Easy",
-    },
-    {
-      id: 5,
-      title: "About Computer",
-      subject: "Technology",
-      questions: 15,
-      difficulty: "Easy",
-    },
-    {
-      id: 6,
-      title: "USA History",
-      subject: "History",
-      questions: 15,
-      difficulty: "Hard",
-    },
-  ];
   useEffect(() => {
     // set selected subject from params
     setSelectedSubject(QuizSubject);
+    Dispatch(getAllQuizApiCall())
   }, []);
+
+  useEffect(() => {
+    // set the quiz in to array
+    setAllquiz(allQuiz)
+  }, [allQuiz])
+
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8 pt-20">
       <div className="md:w-11/12 w-full mx-auto">
@@ -82,25 +55,53 @@ const SubjectQuizzes = () => {
         {/* Quizzes cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* filter quizzes based on selected subject */}
-          {quizzes
+          {AllQuiz
             .filter((subject) => {
               if (SelectedSubject === "All") {
                 return subject;
               } else {
-                return subject.subject === SelectedSubject;
+                return subject.quizeCategory === SelectedSubject;
               }
             })
-            .map((quize) => {
-              return <QuizCard key={quize.id} quiz={quize} />;
+            .map((quiz) => {
+              return <QuizCard key={quiz.id} quiz={quiz} ClickHandle={() => {
+                // sending bellow information to notice quiz component
+                setSelectedQuizeInfo({
+                  duration: quiz?.quizeDuration,
+                  questionNumbers: quiz?.quizeQuestions?.length,
+                  id: quiz?._id
+                })
+                setShowNotice(true)
+              }
+              } />;
             })}
         </div>
 
-        {quizzes.length === 0 && (
-          <p className="text-center text-gray-500 mt-8">
-            No quizzes found for this subject.
-          </p>
-        )}
+        {/* here we are getting the element related to that tab and checking its length */}
+        {AllQuiz?.filter((subject) => {
+          if (SelectedSubject === "All") {
+            return subject
+          }
+          else {
+            return subject.quizeCategory === SelectedSubject
+          }
+        }).length === 0 && (
+            <p className="text-center text-2xl text-gray-500 mt-8">
+              No quizzes found for this subject.
+            </p>
+          )}
       </div>
+
+
+      {/* notice Popup */}
+      {
+        showNotice && <QuizNoticePopup
+          SelectedQuizInfo={SelectedQuizInfo}
+          onAgree={() => Navigate(`/attemptquiz/${SelectedQuizInfo.id}`)}
+          onCancel={()=>{
+            setShowNotice(false)
+          }} />
+      }
     </div>
   );
 };

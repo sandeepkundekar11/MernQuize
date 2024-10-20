@@ -1,9 +1,9 @@
 import React, { Suspense } from "react";
-import "./App.css";
 import { Provider } from "react-redux";
-import store from "./Redux/Store";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
 import HomePageLoadingSkeleton from "./Components/HelperComponent/HomePageLoadingSkeleton";
+import store from "./Redux/Store";
 const LoginPage = React.lazy(() => import("./Components/Loginpage"));
 const SignupPage = React.lazy(() => import("./Components/SignupPage"));
 const HomePage = React.lazy(() => import("./Components/HomePage"));
@@ -38,7 +38,7 @@ const App = () => {
                 path="/subjectquizes/:QuizSubject"
                 element={<SubjectQuizzes />}
               />
-              <Route path="/attemptquiz" element={<AttemptQuizeComponent />} />
+              <Route path="/attemptquiz/:id" element={<AttemptQuizeComponent />} />
             </Route>
           </Routes>
         </BrowserRouter>

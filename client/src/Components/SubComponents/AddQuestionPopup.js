@@ -72,11 +72,11 @@ const AddQuestionPopUp = ({ handleCancel, addQuestion }) => {
     }
     if (
       Object.entries(QuestionInfo.options).some(
-        (option) => option[1].length <= 3 // Validate each option length
+        (option) => option[1].length < 1 // Validate each option length
       )
     ) {
       Object.entries(QuestionInfo.options).forEach(([key, value], index) => {
-        if (value.length <= 3) {
+        if (value.length < 1) {
           // Check if option length is less than 3
           newWarning.optionsWarning[index][`option${index + 1}Warning`] =
             "Option cannot be less than 3 characters";
@@ -96,7 +96,7 @@ const AddQuestionPopUp = ({ handleCancel, addQuestion }) => {
       QuestionInfo.answer !== "" &&
       QuestionInfo.marks >= 1 &&
       Object.entries(QuestionInfo.options).every(
-        (option) => option[1].length > 3 // Corrected to 3
+        (option) => option[1].length >=1 // Corrected to 3
       )
     ) {
       // Check if all validations are passed

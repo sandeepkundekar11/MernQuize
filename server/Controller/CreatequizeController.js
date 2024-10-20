@@ -18,63 +18,62 @@ const CreateQuize = AsyncHandler(async (req, res) => {
   } = req.body;
 
   try {
-    // first creating the question in the loop
-    const Allquestion = await Promise.all(
-      quizeQuestions.map(async (question) => {
-        const {
-          question,
-          optionA,
-          optionB,
-          optionC,
-          optionD,
-          correctAnswer,
-          marks,
-        } = question;
-        return await Quizequestion.create({
-          question,
-          optionA,
-          optionB,
-          optionC,
-          optionD,
-          correctAnswer,
-          marks,
-        });
-      })
-    );
+    if (!quizeName || !quizeDescription || !quizeDuration || !quizeDifficulty || !quizeCategory || quizeQuestions.length < 1 || !totalMarks) {
+      return res.json({ message: "please enter all details" })
+    } else {
+      // first creating the question in the loop
+      const Allquestion = await Promise.all(
+        quizeQuestions.map(async (questions) => {
+          const {
+            question,
+            optionA,
+            optionB,
+            optionC,
+            optionD,
+            correctAnswer,
+            marks,
+          } = questions;
+          return await Quizequestion.create({
+            question,
+            optionA,
+            optionB,
+            optionC,
+            optionD,
+            correctAnswer,
+            marks,
+          });
+        })
+      );
 
-    // now creating the quiz
-    const newQuize = new quize(
-      {
-        quizeName,
-        quizeDescription,
-        quizeDuration,
-        quizeDifficulty,
-        quizeCategory,
-        quizeQuestions: Allquestion.map((question) => question._id),
-        totalMarks,
-        quizAuthor: req.userId,
-      },
-      {
-        new: true,
-        // This option is not needed here as it is used in findAndUpdate operations in Mongoose to return the modified document rather than the original.
-      }
-    );
-    await newQuize.save();
+      // now creating the quiz
+      const newQuize = await quize.create(
+        {
+          quizeName,
+          quizeDescription,
+          quizeDuration,
+          quizeDifficulty,
+          quizeCategory,
+          quizeQuestions: Allquestion.map((question) => question._id),
+          totalMarks,
+          quizAuthor: req.userId,
+        }
+      );
 
-    // update the quize
-    const UpdateUser = await user.updateOne(
-      { _id: req.userId },
-      {
-        $push: {
-          createdquizes: newQuize._id,
-        },
-      }
-    );
+      // update the quize
+      const UpdateUser = await user.updateOne(
+        { _id: req.userId },
+        {
+          $push: {
+            createdquizes: newQuize._id,
+          },
+        }
+      );
 
-    res.status(200).json({
-      message: "Quiz created successfully",
-      quiz: newQuize,
-    });
+      res.status(200).json({
+        message: "Quiz created successfully",
+        quiz: newQuize,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       message: error.message,

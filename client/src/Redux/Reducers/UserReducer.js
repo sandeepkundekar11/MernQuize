@@ -3,7 +3,7 @@ import { JOIN_USER, JOIN_USER_ERROR, JOIN_USER_REQUEST } from "../Actions/UserAc
 const initialState = {
     loading: false,
     user: null,
-    error: null
+    errorsmg: null
 }
 
 const userReducer = (state = initialState, action) => {
@@ -11,7 +11,7 @@ const userReducer = (state = initialState, action) => {
         case JOIN_USER_REQUEST:
             return { ...state, loading: true }
         case JOIN_USER_ERROR:
-            return { ...state, loading: false, error: action.payload }
+            return { ...state, loading: false, errorsmg: action.payload }
         case JOIN_USER:
             return { ...state, loading: false, user: action.payload }
         default:

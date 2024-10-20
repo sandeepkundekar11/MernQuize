@@ -1,8 +1,13 @@
 import React, { memo, Suspense, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import { loginUser } from "../Redux/Actions/UserAction";
 const CommanComponent = React.lazy(() => import("./CommanComponent"))
 // LoginPage component definition
 const LoginPage = () => {
+  const Dispatch = useDispatch()
+  const { loading, user, errorsmg } = useSelector((state) => state.user)
+  const Navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
   // State for storing login data
   const [LoginData, setLoginData] = useState({
@@ -43,6 +48,7 @@ const LoginPage = () => {
     // Check if both email and password have at least 4 characters
     if (LoginData.email.length >= 4 && LoginData.password.length >= 4) {
       // call the login api
+      Dispatch(loginUser(LoginData, Navigate))
     }
     // Set error messages
     setError(newError);
@@ -54,7 +60,7 @@ const LoginPage = () => {
         <div className="m-auto max-h-max min-h-[450px] w-11/12  p-4 shadow-2xl lg:w-[500px] bg-white rounded-lg mack-view">
           <h1 className="text-center text-3xl font-medium text-white">Login</h1>
           <p className="mt-2 text-center text-white font-medium">Login to Access Your Account and Start Creating Quizzes</p>
-          <form className="m-auto" onSubmit={handleSubmit}>
+          <form className="m-auto">
             <div className="mt-2 w-full">
               <p className="text-base text-slate-200">Email</p>
               <input type="text" name="email" value={LoginData.email} onChange={handleChange} className="mt-2 h-10 w-11/12 border p-1 rounded-lg" placeholder="Enter Email" />
@@ -64,7 +70,11 @@ const LoginPage = () => {
               <p className="text-base text-slate-200">Password</p>
               <div className="mt-2 flex h-10 w-11/12 border rounded-lg bg-white">
                 <input type={showPassword ? "text" : "password"} name="password" value={LoginData.password} onChange={handleChange} className="h-full w-full p-2 rounded-lg" placeholder="***********" />
-                <button className="h-full w-10 bg-white rounded-lg" onClick={() => setShowPassword(!showPassword)}>
+                <button className="h-full w-10 bg-white rounded-lg" onClick={(event) => {
+                  event.preventDefault()
+                  setShowPassword(!showPassword)
+                }
+                }>
                   {showPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-black">
 
@@ -79,7 +89,13 @@ const LoginPage = () => {
               </div>
               <p className="mt-1 text-sm font-semibold text-red-500">{error.passwordError}</p>
             </div>
-            <button className="mt-5 h-11 w-11/12 rounded-lg bg-blue-500 font-semibold text-white">Signup</button>
+            <button className="mt-5 h-11 w-11/12 flex justify-center items-center rounded-lg bg-blue-500 font-semibold text-white" onClick={handleSubmit}>
+              {
+                loading ? <>
+                  <div className="w-7 h-7 rounded-full  border-l-2 border-b-2 border-white animate-spin"></div>
+                </> : "Login"
+              }
+            </button>
             <p className="mt-1 text-sm font-semibold text-red-500"></p>
             <div className="mt-2 text-white">Already Have an account? <NavLink to="/signup" className="font-medium text-blue-400">Signup</NavLink></div>
           </form>
