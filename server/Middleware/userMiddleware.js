@@ -7,13 +7,14 @@ const protect = asyncHandler(async (req, res, next) => {
     let token = req.headers["authorization"];
     if (token) {
         // Split the token to get the actual token value
-        let token = token.split(" ")[1];
+         token = token.split(" ")[1];
         try {
             // Verify the token using the secret key
             const decode = jwt.verify(token, process.env.SECRET_KEY);
             if (decode) {
                 // If the token is valid, set the userId in the request object
                 req.userId = decode._id;
+                console.log(decode)
                 next();
             }
             else {
@@ -23,7 +24,7 @@ const protect = asyncHandler(async (req, res, next) => {
             }
         } catch (error) {
             // Log any errors that occur during token verification
-            console.log(error);
+            console.log(error.message,"dsadsad");
         }
     }
     else {

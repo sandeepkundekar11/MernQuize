@@ -24,9 +24,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }); // Create multer instance with specified storage configuration
 
 // User routes
-UserRoute.post("/register", registerUser); // Route for user registration
+UserRoute.post("/Signup", registerUser); // Route for user registration
 UserRoute.post("/login", loginUser); // Route for user login
 UserRoute.get("/profile", protect, getUserProfile); // Protected route for fetching user profile
 UserRoute.put("/updateprofile", protect, upload.single("image"), UpdateProfile); // Protected route for updating user profile with image upload
-UserRoute.get("/getalluser", protect, getAllUser)
 module.exports = UserRoute; // Export the router

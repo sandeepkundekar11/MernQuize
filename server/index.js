@@ -4,6 +4,7 @@ const UserRoute = require("./Routes/UserRoute");
 const App = experss();
 const cors = require("cors");
 const mongoose = require("mongoose");
+const { QuizeRouter } = require("./Routes/QuizeRoute");
 
 mongoose
   .connect(process.env.DATABASE)
@@ -20,8 +21,11 @@ App.use(
     credentials: true,
   })
 );
+
+App.use(experss.json())
 // user route which contains the user related routes like register, login, profile
 App.use("/quiz", UserRoute);
+App.use("/quizroute",QuizeRouter)
 
 App.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);

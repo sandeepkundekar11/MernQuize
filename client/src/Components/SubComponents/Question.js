@@ -23,7 +23,7 @@ const Question = ({ quizInfo }) => {
         </div>
       </div>
       {/*  options */}
-      <div className="Options flex flex-wrap space-x-4 mt-6">
+      <div className="Options flex flex-wrap space-x-4 mt-3">
         {options?.map((option) => {
           return (
             <div className="w-40 h-12 border-2 rounded-xl border-l-4 flex justify-center items-center border-l-blue-500 bg-white ">
@@ -33,11 +33,11 @@ const Question = ({ quizInfo }) => {
         })}
       </div>
       {/* correct Answer */}
-      <h1 className="text-xl mt-6 text-stone-800 font-semibold">
+      <h1 className="text-xl mt-3 text-stone-800 font-semibold">
         Correct Answer :
       </h1>
       {/* correct option */}
-      <div className="md:w-96 mt-4 h-10 p-2 rounded-md  bg-green-200 border-3 flex justify-between items-center">
+      <div className="md:w-96 mt-2 h-10 p-2 rounded-md  bg-green-200 border-3 flex justify-between items-center">
         <p className=" text-xl font-semibold text-green-500">{correctAns}</p>
         {/* dots */}
         <div className="flex space-x-3">

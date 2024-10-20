@@ -2,33 +2,66 @@ const AsyncHandler = require("express-async-handler");
 const { quize } = require("../Schema/QuizeSchema");
 const { AttemptedQuize } = require("../Schema/AttemptedQuizeSchema");
 const { AttemptedQuestions } = require("../Schema/AttemptedQuestionSchema");
-const { quize } = require("../Schema/QuizeSchema");
 const { user } = require("../Schema/UserSchema");
 const GetAllQuizes = AsyncHandler(async (req, res) => {
   try {
+    // id: 1,
+    // title: "Algebra Basics",
+    // subject: "Mathematics",
+    // questions: 20,
+    // difficulty: "Easy",
     let AllQuizeInfo = await quize
       .find(
         {},
         {
           quizeName: 1,
-          quizeDuration: 1,
-          quizAuthor: 1,
-          quizeDescription: 1,
           quizeDifficulty: 1,
           quizeCategory: 1,
           quizeQuestions: 1,
+          quizeDuration:1
         }
       )
-      .populate(
-        "quizeQuestions" /* filed name to populate */,
-        "-correctAnswer" /* property to be exclude */
-      );
 
-    return res.status(200).json({ AllQuizeInfo });
+    return res.status(200).json( AllQuizeInfo );
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 });
+
+
+//get quiz
+const GetQuiz=AsyncHandler(async(req,res)=>
+{
+  const{quizId }=req.params
+  try {
+  
+    if(!quizId)
+    {
+      return res.status(400).json({message:"please provide the quize id"})
+    }
+    const quiz=await quize.find({_id:quizId},{
+      quizeName:1,
+      quizeDescription:1,
+      quizAuthor:1,
+      quizeDifficulty:1,
+      quizeCategory:1, //{subject name}
+      quizeDuration:1,
+      totalMarks:1,
+      quizAttendedBy:1
+    }).populate("quizAuthor","firstName lastName").populate({
+      path:"quizeQuestions",
+      model:"Question"
+    })
+
+    return res.status(200).json(quiz)
+
+  } catch (error) {
+    
+  }
+})
+
+
+// check the submited quize result
 
 const CheckQuize = AsyncHandler(async (req, res) => {
   try {
@@ -42,8 +75,7 @@ const CheckQuize = AsyncHandler(async (req, res) => {
           {
             questions: question._id,
             userAnswer: question.userAnswer,
-          },
-          { new: true }
+          }
         );
       })
     );
@@ -56,8 +88,7 @@ const CheckQuize = AsyncHandler(async (req, res) => {
         attemptedQuestions: AttemptedAllQuestions.map(
           (question) => question._id
         ),
-      },
-      { new: true }
+      }
     );
 
     // populating the attempted questions in attempted quize schema
@@ -151,6 +182,7 @@ const GetPerticularAttemptedQuize = AsyncHandler(async (req, res) => {
 
 module.exports = {
   GetAllQuizes,
+  GetQuiz,
   CheckQuize,
   GetUserAttemptedAllQuize,
   GetPerticularAttemptedQuize,

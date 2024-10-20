@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const attemtedQuestionSchem = new mongoose.Schema({
+const attemtedQuestionSchema = new mongoose.Schema({
   question: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Question",
@@ -13,7 +13,7 @@ const attemtedQuestionSchem = new mongoose.Schema({
 
 const AttemptedQuestions = mongoose.model(
   "AttemptedQuestion",
-  attemtedQuestionSchem
+  attemtedQuestionSchema
 );
 
 module.exports = { AttemptedQuestions };
