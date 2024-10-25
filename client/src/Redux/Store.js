@@ -2,12 +2,14 @@ import { applyMiddleware, combineReducers, createStore } from "redux";
 import { thunk } from "redux-thunk";
 import AddQuizReducer from "./Reducers/AddQuizeReducer,";
 import { GetAllQuizeReducer } from "./Reducers/GetAllQuizReducer";
-import userReducer from "./Reducers/UserReducer";
+import { GetUserReducer, UpdateProfileReducer, userReducer } from "./Reducers/UserReducer";
 
 const rootReducer = combineReducers({
     user: userReducer,
     addQuiz:AddQuizReducer,
-    allQuiz:GetAllQuizeReducer
+    allQuiz:GetAllQuizeReducer,
+    userProfile:GetUserReducer,
+    updateProfile:UpdateProfileReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

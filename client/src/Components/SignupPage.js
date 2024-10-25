@@ -98,7 +98,7 @@ const SignupPage = () => {
                 name="firstName"
                 value={signupInfo.firstName}
                 onChange={handleChange}
-                className="mt-2 h-10 w-11/12 border p-1 rounded-lg"
+                className="mt-2 h-10 w-11/12 border p-1 rounded-lg outline-none"
                 placeholder="Enter firstName"
               />
               <p className="mt-1 text-sm font-semibold text-red-500">
@@ -112,7 +112,7 @@ const SignupPage = () => {
                 name="lastName"
                 value={signupInfo.lastName}
                 onChange={handleChange}
-                className="mt-2 h-10 w-11/12 border p-1 rounded-lg"
+                className="mt-2 h-10 w-11/12 border p-1 rounded-lg outline-none"
                 placeholder="Enter LastName"
               />
               <p className="mt-1 text-sm font-semibold text-red-500">
@@ -126,7 +126,7 @@ const SignupPage = () => {
                 name="email"
                 value={signupInfo.email}
                 onChange={handleChange}
-                className="mt-2 h-10 w-11/12 border p-1 rounded-lg"
+                className="mt-2 h-10 w-11/12 border p-1 rounded-lg outline-none"
                 placeholder="Enter Email"
               />
 
@@ -142,7 +142,7 @@ const SignupPage = () => {
                   name="password"
                   value={signupInfo.password}
                   onChange={handleChange}
-                  className="h-full w-full p-2 rounded-lg"
+                  className="h-full w-full p-2 rounded-lg outline-none"
                   placeholder="***********"
                 />
                 <button
