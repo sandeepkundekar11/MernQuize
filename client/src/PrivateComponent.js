@@ -1,5 +1,5 @@
 import React, { memo, Suspense, useEffect, useState } from "react";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 const NaviagtionBar = React.lazy(() => import("./Components/SubComponents/NavigationBar"))
 // PrivateComponent to protect routes that require authentication
 const PrivateComponent = () => {
@@ -9,7 +9,7 @@ const PrivateComponent = () => {
     // useEffect to check for token in localStorage on component mount
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (!token) {
+        if (token) {
             setIsLoggedIn(true);
         } else {
             setIsLoggedIn(false);

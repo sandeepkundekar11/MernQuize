@@ -1,4 +1,4 @@
-import { memo, useState, useRef, useEffect } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const NavigationBar = () => {
   // State to manage the open/close status of the dropdown menu
@@ -66,7 +66,9 @@ const NavigationBar = () => {
                 >
                   <li
                     className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer"
-                    onClick={handleClick}
+                    onClick={() => {
+                      navigate("/")
+                    }}
                   >
                     Home
                   </li>
@@ -90,7 +92,11 @@ const NavigationBar = () => {
                   </li>
                   <li
                     className="text-white hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md cursor-pointer"
-                    onClick={handleClick}
+                    onClick={() => {
+                      localStorage.clear()
+                      navigate("/login")
+                    }
+                    }
                   >
                     Logout
                   </li>

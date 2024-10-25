@@ -1,8 +1,13 @@
 import React, { memo, Suspense, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import { signUpUser } from "../Redux/Actions/UserAction";
 const CommanComponent = React.lazy(() => import("./CommanComponent"));
 // SignupPage component for user registration
 const SignupPage = () => {
+  const Navigate = useNavigate()
+  const Dispatch = useDispatch()
+  const { loading, user, errorsmg } = useSelector((state) => state.user)
   // State to store user input for signup
   const [signupInfo, setSignupInfo] = useState({
     firstName: "",
@@ -28,8 +33,7 @@ const SignupPage = () => {
 
   // Handler for form submission
   const handleSubmit = (e) => {
-    e.preventDefault();
-
+    e.preventDefault()
     // Initialize new error object
     const newError = {
       firstNameError: "",
@@ -66,6 +70,7 @@ const SignupPage = () => {
       signupInfo.password.length >= 4
     ) {
       //  Implement API call to signup the user
+      Dispatch(signUpUser(signupInfo, Navigate))
     }
 
     // Update error state
@@ -85,7 +90,7 @@ const SignupPage = () => {
             Sign In to Explore and Create Quizzes
           </p>
 
-          <form className="m-auto" onSubmit={handleSubmit}>
+          <form className="m-auto">
             <div className="mt-2 w-full">
               <p className="text-base text-slate-200">FirstName</p>
               <input
@@ -142,7 +147,10 @@ const SignupPage = () => {
                 />
                 <button
                   className="h-full w-10 bg-white rounded-lg"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setShowPassword(!showPassword)
+                  }}
                 >
                   {showPassword ? (
                     <svg
@@ -181,8 +189,13 @@ const SignupPage = () => {
                 {error.passwordError}
               </p>
             </div>
-            <button className="mt-5 h-11 w-11/12 rounded-lg bg-blue-500 font-semibold text-white">
-              Signup
+            <button className="mt-5 h-11 w-11/12 flex justify-center items-center rounded-lg bg-blue-500 font-semibold text-white" onClick={handleSubmit}>
+              {
+                loading ? <>
+                  <div className="w-7 h-7 rounded-full  border-l-2 border-b-2 border-white animate-spin"></div>
+                </> : "Signup"
+              }
+
             </button>
             <p className="mt-1 text-sm font-semibold text-red-500"></p>
 

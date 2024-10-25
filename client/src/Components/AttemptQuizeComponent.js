@@ -1,7 +1,82 @@
 import { memo, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import quizeDummyData from "../DummyData/QuizeDummyData.json";
 const AttemptQuizeComponent = () => {
+  const navigate = useNavigate()
   const [quiz, setQuiz] = useState({});
+
+  // creating a function which stores the quiz duration in localstorage
+  const setCounter = () => {
+    let quizDuration = localStorage.getItem("countdown")
+    try {
+      if (quizDuration) {
+        return JSON.parse(quizDuration)
+      }
+      else {
+        return {
+          min: 0,
+          sec: 10
+        }
+      }
+    } catch (error) {
+      console.log(error.messages)
+    }
+  }
+
+
+  const submiteQuiz = () => {
+    alert("submited")
+    navigate("/")
+  }
+  const [quizDuration, setQuizDuration] = useState(setCounter())
+  const [isTimerActive, setIsTimerActive] = useState(true)
+
+  useEffect(() => {
+    setIsTimerActive(true)
+  }, [])
+
+  // setting the counter
+  useEffect(() => {
+    if (!isTimerActive || (quizDuration.min === 0 && quizDuration.sec === 0)) {
+      return; // Do nothing if the timer is inactive or has reached 0:0
+    }
+  
+    // Create the interval only when timer is active
+    let timeinterval = setInterval(() => {
+      setQuizDuration((prevDuration) => {
+        if (prevDuration.min === 0 && prevDuration.sec === 0) {
+          clearInterval(timeinterval); // Stop the timer when it reaches 0:0
+          setIsTimerActive(false); // Permanently stop the timer
+          return { min: 0, sec: 0 }; // Reset time to 0
+        }
+  
+        if (prevDuration.sec === 0) {
+          return {
+            min: prevDuration.min - 1,
+            sec: 59,
+          };
+        }
+  
+        return {
+          ...prevDuration,
+          sec: prevDuration.sec - 1,
+        };
+      });
+    }, 1000);
+  
+    return () => {
+      clearInterval(timeinterval); // Clean up the interval on component unmount
+    };
+  }, [isTimerActive]);
+
+  useEffect(() => {
+    localStorage.setItem("countdown", JSON.stringify(quizDuration));
+    if (quizDuration.min === 0 && quizDuration.sec === 0) {
+      localStorage.removeItem("countdown");
+    }
+  }, [quizDuration,isTimerActive]);
+
+  // 
   useEffect(() => {
     setQuiz(quizeDummyData);
   }, []);
@@ -56,7 +131,7 @@ const AttemptQuizeComponent = () => {
             </div>
             {/* timing duration */}
             <div className="text-xl font-semibold text-wrap">
-              Time Remaining: 00:00
+              Time Remaining: {quizDuration.min}:{quizDuration.sec}
             </div>
           </div>
           {/*  */}
@@ -67,6 +142,11 @@ const AttemptQuizeComponent = () => {
               </p>
               <p className="text-gray-300 text-lg font-semibold">Medium</p>
             </span>
+
+            <span className="flex flex-wrap">
+              <p className="text-gray-100 font-semibold text-xl">Total Marks : </p>
+              <p className="text-gray-300 text-lg font-semibold">10</p>
+            </span>
             <span className="flex flex-wrap">
               <p className="text-gray-100 font-semibold text-xl">Category : </p>
               <p className="text-gray-300 text-lg font-semibold">History</p>
@@ -74,6 +154,8 @@ const AttemptQuizeComponent = () => {
           </div>
         </div>
 
+
+        {/*  mapping all the questions */}
         {quiz.questions?.map((question) => (
           <div
             key={question.id}
@@ -108,7 +190,7 @@ const AttemptQuizeComponent = () => {
           </div>
         ))}
 
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 flex justify-start">
           <button
             onClick={() => {
               console.log(quiz);

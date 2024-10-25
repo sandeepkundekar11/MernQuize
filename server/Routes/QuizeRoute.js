@@ -6,11 +6,13 @@ const {
   CheckQuize,
   GetUserAttemptedAllQuize,
   GetPerticularAttemptedQuize,
+  GetQuiz,
 } = require("../Controller/QuizeController");
 const QuizeRouter = express.Router();
 
 // Quize Routes
 QuizeRouter.post("/addQuize", protect, CreateQuize); // Route for the Adding the Quize
+QuizeRouter.get("/getQuiz/:quizId",protect,GetQuiz)
 QuizeRouter.get("/getAllQuize", protect, GetAllQuizes); // Route for getting all the Created Quize
 QuizeRouter.put("/submitQuize/:quizeId", protect, CheckQuize); // Route for submiting and return the result of the Attempted quize
 QuizeRouter.get("/allAttemptedQuize", protect, GetUserAttemptedAllQuize); //Route for getting all attempted Quize of that user

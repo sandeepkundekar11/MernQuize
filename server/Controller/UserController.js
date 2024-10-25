@@ -10,31 +10,37 @@ const registerUser = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   try {
     // Check if the user already exists
-    const userExists = await user.findOne({ email: email });
-    if (userExists) {
-      res.status(400).json({ message: "User already exists" });
-    } else {
-      // Hash the password before saving the user
-      let hashedPassowrd = await bcrypt.hash(password, 12);
-      let createUser = new user({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: hashedPassowrd,
-      });
-      // Save the new user to the database
-      await createUser.save();
 
-      // Generate a JWT token for the new user
-      let token = await jwt.sign(
-        { _id: createUser._id },
-        process.env.SECRET_KEY
-      );
-      res.status(200).json({
-        message: "User created successfully",
-        token: token,
-        user: createUser,
-      });
+    if (!firstName || !lastName || !email || !password) {
+      return res.json({ message: "please enter all details" })
+    }
+    else {
+      const userExists = await user.findOne({ email: email });
+      if (userExists) {
+        res.status(400).json({ message: "User already exists" });
+      } else {
+        // Hash the password before saving the user
+        let hashedPassowrd = await bcrypt.hash(password, 12);
+        let createUser = new user({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: hashedPassowrd,
+        });
+        // Save the new user to the database
+        await createUser.save();
+
+        // Generate a JWT token for the new user
+        let token = await jwt.sign(
+          { _id: createUser._id },
+          process.env.SECRET_KEY
+        );
+        res.status(200).json({
+          message: "User created successfully",
+          token: token,
+          user: createUser,
+        });
+      }
     }
   } catch (error) {
     // Handle any errors that occur during registration
@@ -48,27 +54,31 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   try {
-    // Check if the user exists
-    const userExists = await user.findOne({ email: email });
-    if (userExists) {
-      // Compare the provided password with the stored hashed password
-      let isMatch = await bcrypt.compare(password, userExists.password);
-      if (isMatch) {
-        // Generate a JWT token for the logged-in user
-        let token = await jwt.sign(
-          { _id: userExists._id },
-          process.env.SECRET_KEY
-        );
-        res.status(200).json({
-          message: "User logged in successfully",
-          token: token,
-          user: userExists,
-        });
-      } else {
-        res.status(200).json({ message: "password is incorrect" });
-      }
+    if (!email || !password) {
+      return res.json({ message : "enter all details" })
     } else {
-      res.status(500).json({ message: "User not found" });
+      // Check if the user exists
+      const userExists = await user.findOne({ email: email });
+      if (userExists) {
+        // Compare the provided password with the stored hashed password
+        let isMatch = await bcrypt.compare(password, userExists.password);
+        if (isMatch) {
+          // Generate a JWT token for the logged-in user
+          let token = await jwt.sign(
+            { _id: userExists._id },
+            process.env.SECRET_KEY
+          );
+          res.status(200).json({
+            message: "User logged in successfully",
+            token: token,
+            user: userExists,
+          });
+        } else {
+          res.status(200).json({ message: "password is incorrect" });
+        }
+      } else {
+        res.status(500).json({ message: "User not found" });
+      }
     }
   } catch (error) {
     // Handle any errors that occur during login
