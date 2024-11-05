@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAllQuizApiCall } from "../Redux/Actions/GetAllQuizAction";
+import QuizAlreadyAttentedPopup from "./HelperComponent/QuizAlreadyAttentedPopup";
 import QuizNoticePopup from "./HelperComponent/QuizNoticePopup";
 const QuizCard = React.lazy(() => import("./SubComponents/QuizCard"));
 const SubjectQuizzes = () => {
@@ -15,8 +16,12 @@ const SubjectQuizzes = () => {
   const [AllQuiz, setAllquiz] = useState([])
   // selected subject
   const [SelectedSubject, setSelectedSubject] = useState("All");
+  //checks that if that user is already attended the quiz or user is author
+  const [IsQuizAlreadyAttempted, setIsQuizAlreadyAttempted] = useState(false)
+  // checks the user
+  const [isAuthor, setISAuthor] = useState(false)
   // all subjects
-  const subjects = ["All", "Mathematics", "Science", "History", "Technology"];
+  const subjects = ["All", "Maths", "Science", "History", "Technology"];
   // get subject from params
   const { QuizSubject } = useParams();
   useEffect(() => {
@@ -71,7 +76,22 @@ const SubjectQuizzes = () => {
                   questionNumbers: quiz?.quizeQuestions?.length,
                   id: quiz?._id
                 })
-                setShowNotice(true)
+
+                // here bellow we are checking that does user has already attempted the quiz or user is other of that clicked quiz
+                let userId = JSON.parse(localStorage.getItem("user"))._id
+                console.log(userId,)
+                if (quiz?.quizAuthor === userId) {
+                  setIsQuizAlreadyAttempted(true)
+                  setISAuthor(true)
+                }
+                else if (quiz?.quizAttendedBy?.includes(userId)) {
+                  setIsQuizAlreadyAttempted(true)
+                  setISAuthor(false)
+                }
+                else {
+                  setShowNotice(true)
+                  setISAuthor(false)
+                }
               }
               } />;
             })}
@@ -98,9 +118,14 @@ const SubjectQuizzes = () => {
         showNotice && <QuizNoticePopup
           SelectedQuizInfo={SelectedQuizInfo}
           onAgree={() => Navigate(`/attemptquiz/${SelectedQuizInfo.id}`)}
-          onCancel={()=>{
+          onCancel={() => {
             setShowNotice(false)
           }} />
+      }
+      {
+        // show warning popups
+        IsQuizAlreadyAttempted &&
+        <QuizAlreadyAttentedPopup cancel={() => setIsQuizAlreadyAttempted(false)} isAuthor={isAuthor} />
       }
     </div>
   );

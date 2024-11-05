@@ -1,115 +1,50 @@
-{
-    "title": "World Geography Quiz",
-    "questions": [
-        {
-            "id": 1,
-            "question": "What is the capital of France?",
-            "options": [
-                "London",
-                "Berlin",
-                "Paris",
-                "Madrid"
-            ],
-            "userAnswer": ""
+[
+    {
+        "_id": "672a515e8feda4f6e3135d35",
+        "question": {
+            "_id": "672a510f8feda4f6e3135d22",
+            "question": "0What is the answer of this question 10+10+20-10",
+            "optionA": "20",
+            "optionB": "10",
+            "optionC": "30",
+            "optionD": "111",
+            "correctAnswer": "30",
+            "marks": 2,
+            "__v": 0
         },
-        {
-            "id": 2,
-            "question": "Which river is the longest in the world?",
-            "options": [
-                "Amazon",
-                "Nile",
-                "Yangtze",
-                "Mississippi"
-            ],
-            "userAnswer": ""
+        "userAnswer": "30",
+        "__v": 0
+    },
+    {
+        "_id": "672a515e8feda4f6e3135d36",
+        "question": {
+            "_id": "672a510f8feda4f6e3135d23",
+            "question": "what is the answer of following question 2000-1",
+            "optionA": "199",
+            "optionB": "1999",
+            "optionC": "2001",
+            "optionD": "222",
+            "correctAnswer": "1999",
+            "marks": 1,
+            "__v": 0
         },
-        {
-            "id": 3,
-            "question": "On which continent is the Sahara Desert located?",
-            "options": [
-                "Africa",
-                "Asia",
-                "South America",
-                "Australia"
-            ],
-            "userAnswer": ""
+        "userAnswer": "1999",
+        "__v": 0
+    },
+    {
+        "_id": "672a515e8feda4f6e3135d37",
+        "question": {
+            "_id": "672a510f8feda4f6e3135d24",
+            "question": "10+10-100",
+            "optionA": "80",
+            "optionB": "90",
+            "optionC": "2001",
+            "optionD": "11",
+            "correctAnswer": "80",
+            "marks": 3,
+            "__v": 0
         },
-        {
-            "id": 4,
-            "question": "What is the largest country by land area?",
-            "options": [
-                "China",
-                "United States",
-                "Canada",
-                "Russia"
-            ],
-            "userAnswer": ""
-        },
-        {
-            "id": 5,
-            "question": "Which mountain range runs along the border of France and Spain?",
-            "options": [
-                "Alps",
-                "Andes",
-                "Pyrenees",
-                "Carpathians"
-            ],
-            "userAnswer": ""
-        },
-        {
-            "id": 6,
-            "question": "What is the smallest country in the world?",
-            "options": [
-                "Vatican City",
-                "Monaco",
-                "Nauru",
-                "Tuvalu"
-            ],
-            "userAnswer": ""
-        },
-        {
-            "id": 7,
-            "question": "Which country has the most natural lakes?",
-            "options": [
-                "Canada",
-                "Russia",
-                "USA",
-                "India"
-            ],
-            "userAnswer": ""
-        },
-        {
-            "id": 8,
-            "question": "In which ocean is the Bermuda Triangle located?",
-            "options": [
-                "Atlantic Ocean",
-                "Pacific Ocean",
-                "Indian Ocean",
-                "Arctic Ocean"
-            ],
-            "userAnswer": ""
-        },
-        {
-            "id": 9,
-            "question": "What is the longest mountain range in the world?",
-            "options": [
-                "Andes",
-                "Himalayas",
-                "Rocky Mountains",
-                "Alps"
-            ],
-            "userAnswer": ""
-        },
-        {
-            "id": 10,
-            "question": "Which country is known as the Land of the Rising Sun?",
-            "options": [
-                "Japan",
-                "China",
-                "South Korea",
-                "Thailand"
-            ],
-            "userAnswer": ""
-        }
-    ]
-}
+        "userAnswer": "11",
+        "__v": 0
+    }
+]

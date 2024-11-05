@@ -5,7 +5,10 @@ const App = experss();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const { QuizeRouter } = require("./Routes/QuizeRoute");
-
+const path=require("path")
+// Uploads folder path
+const UploadPath=path.join(__dirname,"./Uploads")
+// connecting the mongoose
 mongoose
   .connect(process.env.DATABASE)
   .then(() => {
@@ -21,6 +24,9 @@ App.use(
     credentials: true,
   })
 );
+
+
+App.use(experss.static(UploadPath))
 
 App.use(experss.json())
 // user route which contains the user related routes like register, login, profile

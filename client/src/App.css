@@ -31,7 +31,7 @@
   width: 100vw;
   height: 100vh;
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.372);
+  background-color: rgba(0, 0, 0, 0.892);
   top: 0;
   left: 0;
   z-index: 100;
@@ -58,5 +58,5 @@
   left: 0;
   bottom: 0;
   z-index: 1000;
-  background-color: rgba(128, 128, 128, 0.655);
+  background-color: rgba(128, 128, 128, 0.711);
 }

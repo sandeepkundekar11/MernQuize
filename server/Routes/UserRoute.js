@@ -27,5 +27,5 @@ const upload = multer({ storage: storage }); // Create multer instance with spec
 UserRoute.post("/Signup", registerUser); // Route for user registration
 UserRoute.post("/login", loginUser); // Route for user login
 UserRoute.get("/profile", protect, getUserProfile); // Protected route for fetching user profile
-UserRoute.put("/updateprofile", protect, upload.single("image"), UpdateProfile); // Protected route for updating user profile with image upload
+UserRoute.put("/updateprofile", protect, upload.single("profile"), UpdateProfile); // Protected route for updating user profile with image upload
 module.exports = UserRoute; // Export the router

@@ -2,7 +2,8 @@ const asyncHandler = require("express-async-handler");
 const { user } = require("../Schema/UserSchema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
+const fs = require("fs");
+const path = require("path");
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
@@ -55,7 +56,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   try {
     if (!email || !password) {
-      return res.json({ message : "enter all details" })
+      return res.json({ message: "enter all details" })
     } else {
       // Check if the user exists
       const userExists = await user.findOne({ email: email });
@@ -92,14 +93,24 @@ const loginUser = asyncHandler(async (req, res) => {
 const getUserProfile = asyncHandler(async (req, res) => {
   try {
     // Find the user by ID
-    const userProfile = await user.findById({ _id: req.userId });
+    const userProfile = await user.findById({ _id: req.userId }).
+      populate("createdquizes", "quizeName quizeQuestions quizAttendedBy").populate({
+        path: "attenedquizes",
+        model: "AttemptedQuize",
+        select: "quizeId score",
+        populate: {
+          path: "quizeId",
+          model: "Quize",
+          select:"totalMarks quizeCategory quizeName"
+        }
+      })
     if (userProfile) {
       const userInfo = {
         firstName: userProfile.firstName,
         lastName: userProfile.lastName,
         email: userProfile.email,
-        bio: userProfile.bio,
-        image: userProfile.image,
+        bio: userProfile.bio || null,
+        image: userProfile.image || null,
         _id: userProfile._id,
         createdQuizes: userProfile.createdquizes,
         joinedQuizes: userProfile.attenedquizes,
@@ -117,6 +128,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+
+
 // update profile
 const UpdateProfile = asyncHandler(async (req, res) => {
   const { firstName, lastName, bio } = req.body;
@@ -124,7 +137,52 @@ const UpdateProfile = asyncHandler(async (req, res) => {
   if (firstName) userInfo.firstName = firstName;
   if (lastName) userInfo.lastName = lastName;
   if (bio) userInfo.bio = bio;
-  if (req.file) userInfo.image = `http://localhost:8000/${req.file.filename}`;
+
+  const presentUser = await user.findOne({ _id: req.userId })
+  const pathofUploadedImage = path.join(__dirname, "../Uploads")
+
+  if (req.file) {
+    const PresentImage = presentUser.image?.split("/")[3]?.split("-")[1]
+    const UpdatedImage = req?.file?.filename.split("-")[1]
+    // find the user from the database
+    if (PresentImage !== UpdatedImage) {
+      //  if profile image and incomming image is not same then we will delete present Image becouse we are updating the with new image
+      fs.unlink(`${pathofUploadedImage}/${presentUser.image?.split("/")[3]}`, (err) => {
+        if (!err) {
+          console.log("Image Deleted present Image")
+        }
+      })
+      // updating the new profile image
+      userInfo.image = `http://localhost:8000/${req.file.filename}`;
+    }
+
+    // if previous profile image and incomming images are some then we will delete the incomming Image
+    if (PresentImage === UpdatedImage && req.file.filename) {
+      fs.unlink(`${pathofUploadedImage}/${req.file.filename}`, (err) => {
+        if (!err) {
+          console.log("Image Deleted incoming image")
+        }
+      })
+    }
+  }
+
+  if (req.body.message === "remove") {
+    // remove the image
+    // find the user from the database
+    if (presentUser.image) {
+      fs.unlink(`${pathofUploadedImage}/${presentUser.image.split("/")[3]}`, (err) => {
+        if (!err) {
+          console.log("Image Deleted")
+        }
+      })
+      // removing the data base Image
+      await user.updateOne({ _id: req.userId }, {
+        $set: { image: null }
+      })
+    }
+
+  }
+
   const userProfile = await user.updateOne(
     { _id: req.userId },
     { $set: userInfo },
