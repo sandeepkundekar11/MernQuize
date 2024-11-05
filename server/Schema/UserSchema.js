@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
   ],
   attenedquizes: [
     {
-      ref: "Quize", // Reference to the Quize model for attended quizzes
+      ref: "AttemptedQuize", // Reference to the Quize model for attended quizzes
       type: mongoose.Schema.Types.ObjectId,
     },
   ],

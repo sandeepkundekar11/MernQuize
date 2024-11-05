@@ -5,11 +5,6 @@ const { AttemptedQuestions } = require("../Schema/AttemptedQuestionSchema");
 const { user } = require("../Schema/UserSchema");
 const GetAllQuizes = AsyncHandler(async (req, res) => {
   try {
-    // id: 1,
-    // title: "Algebra Basics",
-    // subject: "Mathematics",
-    // questions: 20,
-    // difficulty: "Easy",
     let AllQuizeInfo = await quize
       .find(
         {},
@@ -18,11 +13,13 @@ const GetAllQuizes = AsyncHandler(async (req, res) => {
           quizeDifficulty: 1,
           quizeCategory: 1,
           quizeQuestions: 1,
-          quizeDuration:1
+          quizeDuration: 1,
+          quizAuthor: 1,
+          quizAttendedBy: 1
         }
       )
 
-    return res.status(200).json( AllQuizeInfo );
+    return res.status(200).json(AllQuizeInfo);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -30,33 +27,31 @@ const GetAllQuizes = AsyncHandler(async (req, res) => {
 
 
 //get quiz
-const GetQuiz=AsyncHandler(async(req,res)=>
-{
-  const{quizId }=req.params
+const GetQuiz = AsyncHandler(async (req, res) => {
+  const { quizId } = req.params
   try {
-  
-    if(!quizId)
-    {
-      return res.status(400).json({message:"please provide the quize id"})
+
+    if (!quizId) {
+      return res.status(400).json({ message: "please provide the quize id" })
     }
-    const quiz=await quize.find({_id:quizId},{
-      quizeName:1,
-      quizeDescription:1,
-      quizAuthor:1,
-      quizeDifficulty:1,
-      quizeCategory:1, //{subject name}
-      quizeDuration:1,
-      totalMarks:1,
-      quizAttendedBy:1
-    }).populate("quizAuthor","firstName lastName").populate({
-      path:"quizeQuestions",
-      model:"Question"
+    const quiz = await quize.findOne({ _id: quizId }, {
+      quizeName: 1,
+      quizeDescription: 1,
+      quizAuthor: 1,
+      quizeDifficulty: 1,
+      quizeCategory: 1, //{subject name}
+      quizeDuration: 1,
+      totalMarks: 1,
+      quizAttendedBy: 1
+    }).populate("quizAuthor", "firstName lastName").populate({
+      path: "quizeQuestions",
+      model: "Question"
     })
 
-    return res.status(200).json(quiz)
+    return res.status(200).json({ message: "quiz retrieved successfully", quiz: quiz })
 
   } catch (error) {
-    
+
   }
 })
 
@@ -68,26 +63,25 @@ const CheckQuize = AsyncHandler(async (req, res) => {
     const { quizeId } = req.params;
     const { questions } = req.body;
 
+
+
     // getting all the questions and add  in attempted question schema
     const AttemptedAllQuestions = await Promise.all(
       questions.map(async (question) => {
         return await AttemptedQuestions.create(
           {
-            questions: question._id,
+            question: question._id,
             userAnswer: question.userAnswer,
           }
         );
       })
     );
-
     // creating the attempted quize in attempted quize schema
     const AttemptedQuizeInfo = await AttemptedQuize.create(
       {
         userId: req.userId,
         quizeId: quizeId,
-        attemptedQuestions: AttemptedAllQuestions.map(
-          (question) => question._id
-        ),
+        attemptedQuestions: AttemptedAllQuestions.map(q => q._id)
       }
     );
 
@@ -100,41 +94,51 @@ const CheckQuize = AsyncHandler(async (req, res) => {
       populate: {
         path: "question",
         model: "Question",
-      },
+      }
     });
 
-    // calculating the score
-    const Quizescore =
-      await AttemptedQuizeToFindScore.attemptedQuestions.reduce((curr, acc) => {
-        if (curr.userAnswer === curr.question.correctAnswer) {
-          return ++acc;
-        }
-      }, 0);
+
+    let Quizescore = 0; // Initialize Quizescore
+
+    for (const ele of AttemptedQuizeToFindScore.attemptedQuestions) {
+      if (ele.userAnswer === ele.question.correctAnswer) {
+        Quizescore += ele?.question?.marks || 0; // Use += to accumulate score
+      }
+    }
+
+
+
 
     // updating the score in AttemptedQuize
-    let latestQuize = await AttemptedQuize.updateOne(
-      { quizeId: quizeId },
+    let latestQuize = await AttemptedQuize.updateOne({
+      _id: AttemptedQuizeInfo._id
+    },
       {
         $set: {
           score: Quizescore,
         },
-      },
-      {
-        new: true,
       }
     );
-    // update the user
 
+    // update the quiz
+    let updateQuiz = await quize.updateOne({ _id: quizeId, }, {
+      $push: { quizAttendedBy: req.userId }
+    })
+
+    // update the user
     const UpdateUser = await user.updateOne(
       { _id: req.userId },
       {
         $push: {
-          createdquizes: newQuize._id,
+          attenedquizes: AttemptedQuizeInfo._id,
         },
+        $inc: {
+          totalMarks: +Quizescore
+        }
       }
     );
 
-    return res.status(200).json({ quizeResult: latestQuize });
+    return res.status(200).json({ message: "quiz evaluated", quizResult: latestQuize });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -162,22 +166,22 @@ const GetUserAttemptedAllQuize = AsyncHandler(async (req, res) => {
 const GetPerticularAttemptedQuize = AsyncHandler(async (req, res) => {
   try {
     const { quizeId } = req.query;
-    const attemptedQuize = await AttemptedQuize.findOne({
-      quizeId: quizeId,
+    const attemptedQuize = await AttemptedQuize.findOne({ $and: [{ userId: req.userId }, { quizeId: quizeId }] }).populate({
+      path: "attemptedQuestions",
+      model: "AttemptedQuestion",
+      populate: {
+        path: "question",
+        model: "Question"
+      }
     })
-      .populate({
-        path: "quizeId",
-        model: "Quize",
-      })
-      .populate({
-        path: "attemptedQuestions",
-        model: "AttemptedQuestion",
-      });
 
-    if (attemptedQuize) {
+    if (!attemptedQuize) {
+      return res.status(404).json({ message: "quiz not found" })
     }
-    return res.status(200).json({ attemptedQuiz: attemptedQuize });
-  } catch (error) {}
+    return res.status(200).json(attemptedQuize.attemptedQuestions);
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
 });
 
 module.exports = {
