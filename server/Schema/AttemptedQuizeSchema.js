@@ -19,7 +19,6 @@ const attemptedQuizeSchema = new mongoose.Schema({
   ],
   score: {
     type: Number,
-    required: true,
   },
 });
 

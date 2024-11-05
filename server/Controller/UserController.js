@@ -93,7 +93,17 @@ const loginUser = asyncHandler(async (req, res) => {
 const getUserProfile = asyncHandler(async (req, res) => {
   try {
     // Find the user by ID
-    const userProfile = await user.findById({ _id: req.userId }).populate("createdquizes", "quizeName quizeQuestions quizAttendedBy");
+    const userProfile = await user.findById({ _id: req.userId }).
+      populate("createdquizes", "quizeName quizeQuestions quizAttendedBy").populate({
+        path: "attenedquizes",
+        model: "AttemptedQuize",
+        select: "quizeId score",
+        populate: {
+          path: "quizeId",
+          model: "Quize",
+          select:"totalMarks quizeCategory quizeName"
+        }
+      })
     if (userProfile) {
       const userInfo = {
         firstName: userProfile.firstName,
@@ -156,7 +166,7 @@ const UpdateProfile = asyncHandler(async (req, res) => {
     }
   }
 
-  if (req.body.message==="remove") {
+  if (req.body.message === "remove") {
     // remove the image
     // find the user from the database
     if (presentUser.image) {

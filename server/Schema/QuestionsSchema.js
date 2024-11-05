@@ -4,11 +4,9 @@ const mongoose = require("mongoose");
 const questionSchema = new mongoose.Schema({
   question: {
     type: String,
-   
   },
   optionA: {
-    type: String,
-    
+    type: String, 
   },
   optionB: {
     type: String,

@@ -20,7 +20,8 @@ export default function Profile() {
     CreatedQuiz: 0,
     TotalQuizAttended: 0,
     CreatedQuizes: [],
-    message: ""
+    message: "",
+    attendedQuizList: []
   });
   const [imageUrl, setImageUrl] = useState("");
 
@@ -70,6 +71,7 @@ export default function Profile() {
       CreatedQuiz: user?.createdQuizes?.length,
       TotalQuizAttended: user?.joinedQuizes?.length,
       CreatedQuizes: user?.createdQuizes,
+      attendedQuizList: user?.joinedQuizes
     })
   }, [user])
 
@@ -254,6 +256,29 @@ export default function Profile() {
               <p className="text-3xl font-bold text-orange-600">
                 {userInfo.CreatedQuiz}
               </p>
+            </div>
+          </div>
+          {/* show list all available quiz and preview */}
+          <div className="w-full mt-4 m-auto bg-slate-50 h-auto p-4">
+            <h1 className="font-semibold text-xl">Attended Quizzes</h1>
+            <div className="w-full max-h-96 min-h-8 overflow-auto overflow-x-hidden">
+             {
+             userInfo?.attendedQuizList?.map((ele)=>
+              {
+                return(
+                  <div className="w-full mt-3 bg-white h-auto rounded-lg  p-4 flex justify-between ">
+                    <div>
+                      <h1 className="font-semibold">{ele?.quizeId?.quizeName}</h1>
+                      <p>{ele?.quizeId?.quizeCategory}</p>
+                    </div>
+                    <div  className="flex items-center justify-between">
+                      <p className="bg-slate-200 rounded-md px-2 w-auto">score : {ele?.score}/{ele?.quizeId?.totalMarks}</p>
+                      <button className="border px-4 py-2 rounded-md ml-3 hover:bg-slate-200">Preview</button>
+                    </div>
+                  </div>
+                )
+              })
+             }
             </div>
           </div>
           {/* // Your Quizzes section */}

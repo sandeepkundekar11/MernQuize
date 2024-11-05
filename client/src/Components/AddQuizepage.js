@@ -231,6 +231,7 @@ const AddQuizepage = () => {
                 onChange={handleChange}
               >
                 <option value={0}>Select Time Limit</option>
+                <option value={1}>Quick Quiz (1 Min)</option>
                 <option value={5}>5 min</option>
                 <option value={10}>10 min</option>
                 <option value={15}>15 min</option>
